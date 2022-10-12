@@ -4,10 +4,12 @@
 \usepackage{fourier}
 \usepackage{caption}
 \usepackage{amssymb}
+\usepackage[linesnumbered]{algorithm2e} %,lined,boxed,commentsnumbered
 \usepackage{subcaption}
 \usepackage{epigraph}
 \usepackage{tikz}
 \usepackage{babel}
+\usepackage{amsfonts}
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{csquotes}
@@ -36,8 +38,9 @@
     \item Length of a number: $l_{b}(n)$, $k$. It's equal to $log(n)$.
     \item $(a,b)$ is the Maximum Common Divisor of $a,b$.
     \item Let $n \in N$: $n = (d_{k-1}, d_{k-2}, \dots, d_{1}, d_{0})$\footnote{$d_{k-1} \neq 0$}.
-    \item $\phi(n)$: the number of elements $a$ in $[1,n]$ such that $(a,n) = 1$.
-    \item $\equiv_{p}$ is the equivalence in base $p$. Ex.: $5 \equiv_{3} = 5 mod 3 = 2 $
+    \item $\varphi(n)$: the number of elements $a$ in $[1,n]$ such that $(a,n) = 1$.
+    \item $\equiv_{p}$ is the equivalence in base $p$. Ex.: $5 \equiv_{3} = 5 \bmod 3 = 2 $.
+    \item Let $\mathbb{Z}_{n}[X]$ be the set of polynomials in $X$ with coefficients in $Z_{n}$.
 \end{itemize}
 
 
@@ -101,24 +104,112 @@ Proof by induction, on $s$:
 \end{itemize}
 \subsubsection{Applications}
 \begin{itemize}
-    \item An analogous dimonstration can be used to prove that $T(\prod_{j = 1}^{s+1} m_{j} mod n) = O(s \cdot log^{2}(M))$
+    \item An analogous dimonstration can be used to prove that $T(\prod_{j = 1}^{s+1} m_{j} \bmod n) = O(s \cdot log^{2}(M))$
     \item This proof can be used to show that $T(m!) = O(m \cdot log^{2}(m))$.
 \end{itemize}
 
 \section{Optimizations of more complex operations}
 \subsection{Powers \& Modular Powers}
+Let's consider what follows: $a^n = a \cdot a \cdot a \cdot \dots \cdot a$, where $a$ is repeated $n$ times.
 \subsubsection{Trivial implementation}
-\subsubsection{Square \& Multiply method for scalars}
+The most trivial implementation would consists in computing the product $\prod_{j = 1}^{n} a$. This would imply a cost of $O(n^{2} \cdot log^{2}(a)))$.\newline
+What follows is a suggestion that could improve the cost of this operation.
+\subsubsection{Square \& Multiply method for scalars, modular powers}
+Each number in $\mathbb{Z}$ can be represented in a binary notation. \newline
+Let's consider $n = (b_{k-1}, b_{k-2}, \dots, b_{0}) = \sum_{i=0}^{k-1} b_{i} \cdot 2^{i}$. \newline
+It is clear that we can spare a lot of computational resources by just calculating the powers of 2 and summing the ones that have $b_{i} = 1$. The following algorithm explains the procedure in detail.
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\caption{The Square \& Multiply Method}\label{alg:SquareMultiply}
+$P \gets 1$\;
+$M \gets m$\;
+$A \gets a \bmod n$\;\label{instr_3}
+\While{$M > 0$}{
+    $q \gets \lfloor \frac{M}{2} \rfloor$\;\label{instr_5}
+    $r \gets M - s \cdot q$\;\label{instr_6}
+    \If{$r = 1$}{
+        $P \gets P \cdot A \bmod n$\;\label{instr_8}
+    }
+    $A \gets A^{2} \bmod n$\;\label{instr_10}
+    $M \gets q$\;
+
+}
+\Return{P}
+\end{algorithm}
+Let's compute the complexity of this algorithm:
+\begin{itemize}
+    \item All of the assignments $X \gets Y$ are implemented in $O(log(Y))$.
+    \item The cost of \ref{instr_3} is $O(log(a) \cdot log(n))$, because it ensures that $A \leq n$.
+    \item Instructions \ref{instr_5} and \ref{instr_6} can be executed in $O(log(m))$.
+    \item Instrucion \ref{instr_8} can be executed in $O(log^{2}(n))$.
+    \item The cost of \ref{instr_10} is $O(log^{2}(n))$, because it ensures that $A \leq n$.
+    \item The loop is executed $log(m)$ times.
+    \item The total cost of this algorithm is then $O(log(n) \cdot log(a) + log(m) \cdot (log^{2}(n) + log(m)))$ \\ $= O(log^{2}(m) + log(m) \cdot log(n))$.
+\end{itemize}
+This algorithm can be easily converted for the computation of non-modular powers by applying the following changes:
+\RestyleAlgo{ruled}
+\begin{algorithm}
+    $A \gets a \bmod n$ $\Longrightarrow$ $A \gets a$\;\label{instr_3a}
+    $P \gets P \cdot A \bmod n$ $\Longrightarrow$ $P \gets P \cdot A$\;\label{instr_8a}
+    $A \gets A^{2} \bmod n$ $\Longrightarrow$ $A \gets A^{2}$\;\label{instr_10a}
+\end{algorithm}
 \subsubsection{Square \& Multiply method for polynomials}
+Let's consider $\Re = \frac{\mathbb{Z}_{n}[x]}{x^{r} - 1}$. The modular powers of the elements in this set can be computed by using a variation of the Square \& Multiply method. \newline
+\begin{itemize}
+    \item Assume that $f, g \in \Re$.
+    \item Let $h(x) = f(x) \cdot g(x) = \sum_{j = 0}^{2r - 2} h_{j} \cdot x^{j}$.
+    \item Where $h(j) = (\sum_{i=0}^{j} f_{i} \cdot g_{j - i} \bmod n) \bmod n$.
+    \item Then, $T(h_{j}) = O(j \cdot log^{2}(n))$.
+    \item Then, $T(h(x)) = O(\sum_{j = 0}^{log^{2}(n)}) = O(r^{2} \cdot log^{2}(n))$.
+\end{itemize}
+This result will be useful in the following computations. \newline
+Let's now consider $\frac{h(x)}{x^{r} - 1}$. \newline
+\begin{itemize}
+    \item When $j > r - 1$, $h_{j} \cdot x^{j}$ does not take any part in the computations.
+    \item When $j = r$, then, $\frac{h_{r} \cdot x^{r}}{x^{r} - 1 } = h_{r} + \frac{h_{r}}{x^{r} - 1}$ \\ Or, in other words: $h_{r} \cdot x^{r} \equiv_{x^{r} - 1} h_{r}$.
+    \item In the other cases: $h_{r+i} \cdot x^{r+i} \equiv_{x^{r} - 1} h_{r-i} \cdot x^{r-i}$ for $1 \leq i \leq r - 2$.
+\end{itemize}
+%An image can be useful
+Then, $h(x) \equiv_{(n, x^{r} - 1)} f(x) \cdot g(x) \equiv$ \\ $[\sum_{j=0}^{r - 2}((h_{j} + h_{r + j}) \bmod n) \cdot x^{j}] + h_{r-1} \cdot x^{r-1}$.\label{comp:partial_prod_pol} \newline
+Therefore, $T(h(x) \bmod (n, x^{r} - 1)) = O(r^{2} \cdot log^{2}(n))$. \newline
+Finally, we can analyze the complexity of the computation of the modular power $h(x)$ elevated to $n$. \newline
+In order to optimize the use of the computational resources, we can use a variation of the Square \& Multiply method (See \ref{alg:SquareMultiply});
+although, this time, the computation of the partial products will be conducted by using the previously explained procedure (See \ref{comp:partial_prod_pol}). \newline
+The cost of this method would then be $T(\#Loops \cdot (h(x) \bmod (n, x^{r} - 1))) =$ \\ $O(log(n) \cdot r^{2} \cdot log(n)) = O(r^{2} \cdot log^{3}(n))$.
+
 \subsection{Finding the $b$ representation of $n$ ($n_{b}$)}
+Let's consider the cost in bit operations of the conversion of a number $n$ to a new base $b$. \newline
+The algorithm used will be the classical: a succession of divisions by $b$. \newline
+\begin{itemize}
+    \item Let's consider $r_{i} \in \{0, 1, \dots, b-1\}$.
+    \item Let $n_{b} = (r_{k+1}, r_{k}, \dots, r_{1}, r_{0})$.
+    \item Then: \begin{itemize}
+                    \item $n = q_{0} \cdot b + r_{0}$
+                    \item $q_{0} = q_{1} \cdot b + r_{1}$
+                    \item $\dots$
+                    \item $q_{k} = 0 \cdot b + q_{k}$
+                \end{itemize}
+    \item Consider then that $q_{k} = r_{k+1}$
+    \item And that $b^{k+2} > n > b^{k+1} \rightarrow (k+2) \cdot log(b) \leq log(n) \leq (k+1) \cdot log(b)$.
+    \item $\therefore k = O(\frac{log(n)}{log(b)})$.
+\end{itemize}
+We can now proceed with the computation of the cost of this operation: \newline
+$T(n_{b}) = T(\#Divisions \cdot q_{i} \bmod b) = O(\frac{log(n)}{log(b)} \cdot log(n) \cdot log(b)) = $ \\
+$O(log^{2}(n))$ 
 \subsection{Modular inverses}
 
 
 \section{Reminders of Modular Arithmetic}
-\subsection{Little Fermat's Theorem}
+\subsection{Little Fermat's Theorem}\label{little_fermat_th}
 \begin{itemize}
     \item Let $p$ be a prime number.
     \item Then, $a^{p-1} \equiv_{p} 1$.
+\end{itemize}
+
+\subsection{Euler-Fermat's Theorem}\label{euler_fermat_th}
+\begin{itemize}
+    \item Let $n \in \mathbb{Z}$ be a number.
+    \item Then, $a^{\varphi(n)} \equiv_{n} 1$.
 \end{itemize}
 
 
@@ -127,5 +218,7 @@ Proof by induction, on $s$:
 \begin{itemize}
     \item The \href{https://gmplib.org/}{GMP library} is a free library for arbitrary precision arithmetic. It implements all the basic arithmetic operations with the maximum efficency possible.
 \end{itemize}
+
+\listofalgorithms
 
 \end{document}

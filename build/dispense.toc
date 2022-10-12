@@ -13,10 +13,11 @@
 \contentsline {section}{\numberline {1.4}Optimizations of more complex operations}{5}{section.1.4}%
 \contentsline {subsection}{\numberline {1.4.1}Powers \& Modular Powers}{5}{subsection.1.4.1}%
 \contentsline {subsubsection}{Trivial implementation}{5}{section*.3}%
-\contentsline {subsubsection}{Square \& Multiply method for scalars}{5}{section*.4}%
-\contentsline {subsubsection}{Square \& Multiply method for polynomials}{5}{section*.5}%
-\contentsline {subsection}{\numberline {1.4.2}Finding the $b$ representation of $n$ ($n_{b}$)}{5}{subsection.1.4.2}%
-\contentsline {subsection}{\numberline {1.4.3}Modular inverses}{5}{subsection.1.4.3}%
-\contentsline {section}{\numberline {1.5}Reminders of Modular Arithmetic}{5}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1}Little Fermat's Theorem}{5}{subsection.1.5.1}%
-\contentsline {section}{\numberline {1.6}Useful Facts}{5}{section.1.6}%
+\contentsline {subsubsection}{Square \& Multiply method for scalars, modular powers}{5}{section*.4}%
+\contentsline {subsubsection}{Square \& Multiply method for polynomials}{6}{section*.7}%
+\contentsline {subsection}{\numberline {1.4.2}Finding the $b$ representation of $n$ ($n_{b}$)}{7}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Modular inverses}{8}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}Reminders of Modular Arithmetic}{8}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Little Fermat's Theorem}{8}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Euler-Fermat's Theorem}{8}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}Useful Facts}{8}{section.1.6}%
