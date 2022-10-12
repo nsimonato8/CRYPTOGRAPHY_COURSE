@@ -1,0 +1,131 @@
+\documentclass[12pt, a4paper, english]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{makecell}
+\usepackage{fourier}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{subcaption}
+\usepackage{epigraph}
+\usepackage{tikz}
+\usepackage{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage{underscore}
+\usepackage{amsmath}
+\usepackage{biblatex}
+\usepackage[rightcaption]{sidecap}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\graphicspath{ {img/} }
+
+\author{Niccolò Simonato}
+\title{Cryptography: notes}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Elementary operations}
+\section{Notation}
+\begin{itemize}
+    \item Let $b$ be a numeric base.
+    \item Let $n$ be a number in $N$.
+    \item Length of a number: $l_{b}(n)$, $k$. It's equal to $log(n)$.
+    \item $(a,b)$ is the Maximum Common Divisor of $a,b$.
+    \item Let $n \in N$: $n = (d_{k-1}, d_{k-2}, \dots, d_{1}, d_{0})$\footnote{$d_{k-1} \neq 0$}.
+    \item $\phi(n)$: the number of elements $a$ in $[1,n]$ such that $(a,n) = 1$.
+    \item $\equiv_{p}$ is the equivalence in base $p$. Ex.: $5 \equiv_{3} = 5 mod 3 = 2 $
+\end{itemize}
+
+
+\section{Classification of the algorithms' complexity}
+In order to better identify the classes of complexity of the algorithms, the following 3 classes are defined:
+\begin{itemize}
+    \item Polynomial time: $O(log^{\alpha}(n))$ bit operations, where $\alpha > 0$.
+    \item Exponential time: $O(exp(c \cdot log(n)))$ bit operations, where $c > 0$.
+    \item Sub-exponential time: $O(exp(c \cdot log(n))^{\alpha})$ bit operations, where $c > 0, \alpha \in ]0, 1[$.
+\item
+\end{itemize}
+
+
+\section{Basic bit operations}
+\subsection{Sum of 3 bits - 3-bit-sum}
+Given $n_{1}, n_{2}$ their sum produces $n_{1} + n_{2}$ and their carry. \newline
+Since $n_{1}, n_{2} \in [0,1]$, then this operation can be done in $O(1)$.
+
+\subsection{Summation of 2 numbers}
+Given $n_{1}, n_{2}$ their sum produces $n_{1} + n_{2}$. \newline
+Since the sum is computed bit by bit, the 3-bit-sum is performed\\$max\{lenght(n_{1}), length(n_{2})\}$ times.\newline
+Each time the carry on of the previous sum is added to the two digits. \newline
+This operation has then complexity $O(max\{lenght(n_{1}), length(n_{2})\}) = O(max\{log(n_{1}), log(n_{2})\})$
+
+\subsection{Summation of $n$ numbers}
+The summation of $n$ numbers is simply the sum of two numbers, but performed $n - 1$ times. \newline
+Let's assume that $\forall i \in [1,n]: M \geq a_{i}$. \newline
+The complexity of this operation is then $O((n-1) \cdot log(M)) = O(n)$. \newline
+
+\subsection{Product of 2 numbers}
+If we consider the classic implementation of the binary multiplication, that is just a sequence of summations. \newline
+\begin{itemize}
+    \item The number of summations to execute is equal to the length of the smallest number, $O(log(n))$.
+    \item The maximum cost of a single summation is $O(log(m))$.
+    \item Then, $T(m \cdot n) = O(log(m) \cdot log(n))$, but, if we consider the worst case\footnote{two numbers that are equally large}, that becomes $O(log^{2}(m))$.
+\end{itemize}
+
+\subsection{Division of 2 numbers}
+Let's consider the division of two numbers $m, n$. This operations consists in \\ finding two numbers $q, r$ such that $m = q \cdot n + r$. \newline
+This is achieved by performing a succession of subtractions, until the ending condition $0 \leq r < n$ is reached. \newline
+\begin{itemize}
+    \item Let's consider that the number of steps of this algorithm is $O(log(q))$.
+    \item Moreover, $q \leq m \therefore \#steps = O(log(m))$.
+    \item It's assumed that the cost of the single subtraction is $O(log(n))$.
+    \item Then, $T(\frac{m}{n}) = O(log(n) \cdot log(m))$.
+\end{itemize}
+
+\subsection{Production of $n$ numbers}
+Let's assume that $j \in [1, s+1]$ and $M = max(m_{j})$. \newline
+The cost of the operation $\prod_{j = 1}^{s+1} m_{j}$ is then $O(s^{2} \cdot log^{2}(M))$. This will now be considered our inductive hypothesis.\newline
+Proof by induction, on $s$:
+\begin{itemize}
+    \item (1) Base case: $T(m_{1} \cdot m_{2}) = O(log(m_{1}) \cdot log(m_{2})) = O(k_{1} \cdot k_{2}) \leq c \cdot k_{M}^{2}$.
+    \item (2) Base case: $T(m_{1} \cdot m_{2} \cdot m_{3}) = T(m_{1} \cdot m_{2}) + T((m_{1} \cdot m_{2}) \cdot m_{3})$ \\ $\leq c \cdot k_{M}^{2} + c \cdot k_{m_{1} \cdot m_{2}} + k_{m_{3}}$ \\ $\leq c \cdot k_{M}^{2} + c \cdot k_{M^{2}} + k_{M}$
+    \item Inductive step: we assume the inductive hypothesis to be true up to $s$. Then,
+    \\ $T(\prod_{j = 1}^{s+1} m_{j}) = T([\prod_{j = 1}^{s} m_{j}] \cdot m_{s+1})$
+    \\ $\leq c \cdot \sum_{j=1}^{s} (j \cdot k_{M}^{2})$
+    \\ $= c \cdot k_{M}^{2} \cdot \frac{s \cdot (s-1)}{2}$
+    \\ $= O(k_{M}^{2} \cdot s^{2})$
+    \\ $= O(s^{2} \cdot log^{2}(M))$
+\end{itemize}
+\subsubsection{Applications}
+\begin{itemize}
+    \item An analogous dimonstration can be used to prove that $T(\prod_{j = 1}^{s+1} m_{j} mod n) = O(s \cdot log^{2}(M))$
+    \item This proof can be used to show that $T(m!) = O(m \cdot log^{2}(m))$.
+\end{itemize}
+
+\section{Optimizations of more complex operations}
+\subsection{Powers \& Modular Powers}
+\subsubsection{Trivial implementation}
+\subsubsection{Square \& Multiply method for scalars}
+\subsubsection{Square \& Multiply method for polynomials}
+\subsection{Finding the $b$ representation of $n$ ($n_{b}$)}
+\subsection{Modular inverses}
+
+
+\section{Reminders of Modular Arithmetic}
+\subsection{Little Fermat's Theorem}
+\begin{itemize}
+    \item Let $p$ be a prime number.
+    \item Then, $a^{p-1} \equiv_{p} 1$.
+\end{itemize}
+
+
+
+\section{Useful Facts}
+\begin{itemize}
+    \item The \href{https://gmplib.org/}{GMP library} is a free library for arbitrary precision arithmetic. It implements all the basic arithmetic operations with the maximum efficency possible.
+\end{itemize}
+
+\end{document}
