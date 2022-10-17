@@ -1288,7 +1288,6 @@ INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
-INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\futb8t.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\vf\public\fourier\futb8t.vf
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\futb8r.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\fourier-alt-bold.tfm
@@ -1322,6 +1321,7 @@ INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\four
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\fourier-mcl.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\vf\public\fourier\futr8t.vf
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\fourier-alt.tfm
+INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\futb8t.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\vf\public\fourier\futb8t.vf
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\futb8r.tfm
 INPUT C:\Users\nsimo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fourier\fourier-alt-bold.tfm

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.8) (preloaded format=pdflatex 2022.8.30)  12 OCT 2022 17:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.8) (preloaded format=pdflatex 2022.8.30)  17 OCT 2022 13:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1420,7 +1420,8 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.33 \chapter
-             {Elementary operations} [1
+             {Efficient implementations of elementary operations and element...
+[1
 
 ]
 Chapter 1.
@@ -1524,7 +1525,75 @@ Underfull \hbox (badness 10000) in paragraph at lines 182--184
 
  []
 
-[7] [8]
+[7]
+dispense.tex:208: Missing $ inserted.
+<inserted text> 
+                $
+l.208     \item \therefore
+                           $x$ is the modular inverse of $a$ in $\mathbb{Z}_...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+dispense.tex:208: LaTeX Error: \math@bb allowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.208 ...is the modular inverse of $a$ in $\mathbb
+                                                  {Z}_{m}$ for its definition.
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+dispense.tex:209: LaTeX Error: Command \end{itemize} invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.209 \end{itemize}
+                   
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+dispense.tex:209: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.209 \end{itemize}
+                   
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+dispense.tex:209: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.209 \end{itemize}
+                   
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+dispense.tex:209: Missing $ inserted.
+<inserted text> 
+                $
+l.209 \end{itemize}
+                   
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+[8]
 (C:\Users\nsimo\OneDrive\Documenti\UniPd\1ST YEAR\CRYPTOGRAPHY\build\dispense.l
 oa)
 \tf@loa=\write7
@@ -1536,16 +1605,16 @@ oa)
 (C:\Users\nsimo\OneDrive\Documenti\UniPd\1ST YEAR\CRYPTOGRAPHY\build\dispense.a
 ux)
 Package rerunfilecheck Info: File `dispense.out' has not changed.
-(rerunfilecheck)             Checksum: CD276AA543826799D5B7DB3081E40E63;3363.
+(rerunfilecheck)             Checksum: 48DDD0E78393FC8D3EB305FD9AF2030E;4013.
 Package logreq Info: Writing requests to 'dispense.run.xml'.
 \openout1 = `dispense.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32956 strings out of 477843
- 623485 string characters out of 2823599
+ 32958 strings out of 477843
+ 623519 string characters out of 2823599
  1327350 words of memory out of 3000000
- 51261 multiletter control sequences out of 15000+600000
+ 51262 multiletter control sequences out of 15000+600000
  580766 words of font info for 155 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  100i,16n,104p,1135b,1832s stack positions out of 10000i,1000n,20000p,200000b,80000s
@@ -1560,9 +1629,9 @@ eX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/nsimo/AppData/Local
 cal/Programs/MiKTeX/fonts/type1/adobe/utopia/putr8a.pfb><C:/Users/nsimo/AppData
 /Local/Programs/MiKTeX/fonts/type1/adobe/utopia/putri8a.pfb>
 Output written on "C:\Users\nsimo\OneDrive\Documenti\UniPd\1ST YEAR\CRYPTOGRAPH
-Y\build\dispense.pdf" (10 pages, 125252 bytes).
+Y\build\dispense.pdf" (10 pages, 130238 bytes).
 PDF statistics:
- 235 PDF objects out of 1000 (max. 8388607)
- 57 named destinations out of 1000 (max. 500000)
- 157 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 241 PDF objects out of 1000 (max. 8388607)
+ 58 named destinations out of 1000 (max. 500000)
+ 165 words of extra memory for PDF output out of 10000 (max. 10000000)
 

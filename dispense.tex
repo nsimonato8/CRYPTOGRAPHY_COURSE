@@ -30,7 +30,7 @@
 
 \tableofcontents
 
-\chapter{Elementary operations}
+\chapter{Efficient implementations of elementary operations and elements of Number Theory}
 \section{Notation}
 \begin{itemize}
     \item Let $b$ be a numeric base.
@@ -178,7 +178,7 @@ In order to optimize the use of the computational resources, we can use a variat
 although, this time, the computation of the partial products will be conducted by using the previously explained procedure (See \ref{comp:partial_prod_pol}). \newline
 The cost of this method would then be $T(\#Loops \cdot (h(x) \bmod (n, x^{r} - 1))) =$ \\ $O(log(n) \cdot r^{2} \cdot log(n)) = O(r^{2} \cdot log^{3}(n))$.
 
-\subsection{Finding the $b$ representation of $n$ ($n_{b}$)}
+\subsection{Finding the $b$-expansion of $n$ ($n_{b}$)}
 Let's consider the cost in bit operations of the conversion of a number $n$ to a new base $b$. \newline
 The algorithm used will be the classical: a succession of divisions by $b$. \newline
 \begin{itemize}
@@ -197,7 +197,16 @@ The algorithm used will be the classical: a succession of divisions by $b$. \new
 We can now proceed with the computation of the cost of this operation: \newline
 $T(n_{b}) = T(\#Divisions \cdot q_{i} \bmod b) = O(\frac{log(n)}{log(b)} \cdot log(n) \cdot log(b)) = $ \\
 $O(log^{2}(n))$
-\subsection{Modular inverses}
+\subsection{How to use Bezout formula to compute modular inverses}
+An efficient way of computing the modular inverse of a given number $a$ with in the ring $\mathbb{Z}_{m}$ uses the corollary of the \emph{Bezout identity} and the \emph{Extended Euclidean Algorithm}.\newline
+That is, given $a \cdot x \equiv_{m} 1$, we want to compute $x$.\newline
+\emph{Extended Euclidean Algorithm}, given $a, m$ computes the $gcd(a,m)$ and also returns the coefficients $x,y$ for which $ax + my = 1$. \newline
+At this point, the modular inverse of $a$ in $\mathbb{Z}_{m}$ is $x$:
+\begin{itemize}
+    \item Let's consider that $ax + my \equiv_{m} 1$;
+    \item Since $my \equiv_{m} 0$, then $ax \equiv_{m} 1$;
+    \item \therefore $x$ is the modular inverse of $a$ in $\mathbb{Z}_{m}$ for its definition.
+\end{itemize}
 
 
 \section{Reminders of Modular Arithmetic}
@@ -212,6 +221,13 @@ $O(log^{2}(n))$
     \item Let $n \in \mathbb{Z}$ be a number.
     \item Then, $a^{\varphi(n)} \equiv_{n} 1$.
 \end{itemize}
+
+\subsection{Bézout's identity}
+ \begin{itemize}
+     \item Let $a$ and $b$ be integers with greatest common divisor $d$.
+     \item Then there exist integers $x$ and $y$ such that $ax + by = d$.
+     \item Moreover, the integers of the form $az + bt$ are exactly the multiples of $d$.
+ \end{itemize}
 
 
 
