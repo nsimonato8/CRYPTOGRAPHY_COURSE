@@ -54,6 +54,7 @@ In order to better identify the classes of complexity of the algorithms, the fol
 \end{itemize}
 
 
+
 \section{Basic bit operations}
 \subsection{Sum of 3 bits - 3-bit-sum}
 Given $n_{1}, n_{2}$ their sum produces $n_{1} + n_{2}$ and their carry. \newline
@@ -222,9 +223,12 @@ The cost of this algorithm is then $O(order(a) \cdot log^{2}(p))$, because we ha
 
 \section{Elements of Number Theory}
 \subsection{The cyclic group $\mathbb{Z}_{n}^{*}$}
-The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as ${a \in \mathbb{Z}_{n}: (a,n) = 1}$.\newline
-The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that $\forall a \in \mathbb{Z}_{n}^{*} \exist i: a \equiv_{m} g^{i}$. For this reason, $\mathbb{Z}_{n}^{*}$ is also referred as $< g >$.\newline
-An interesting property is that only for $\[1,2,4, \phi, \phi^{\alpha}, 2\phi^{\alpha}\]$, $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^{\alpha}$ is a power of a prime number.\newline
+The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as $\{a \in \mathbb{Z}_{n}: (a,n) = 1\}$.\newline
+The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that
+$\forall a \in \mathbb{Z}_{n}^{*} \exists i: a \equiv_{m} g^{i}$.
+For this reason, $\mathbb{Z}_{n}^{*}$ is also referred as $< g >$.\newline
+An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\alpha}]$,
+ $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^\alpha$ is a power of a prime number.\newline
 
 \section{Reminders of Modular Arithmetic}
 \subsection{Little Fermat's Theorem}\label{little_fermat_th}
