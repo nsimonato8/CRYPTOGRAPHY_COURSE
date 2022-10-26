@@ -75,12 +75,12 @@ Since $n_{1}, n_{2} \in [0,1]$, then this operation can be done in $O(1)$.
 Given $n_{1}, n_{2}$ their sum produces $n_{1} + n_{2}$. \newline
 Since the sum is computed bit by bit, the 3-bit-sum is performed\\$max\{lenght(n_{1}), length(n_{2})\}$ times.\newline
 Each time the carry on of the previous sum is added to the two digits. \newline
-This operation has then complexity $O(max\{lenght(n_{1}), length(n_{2})\}) = O(max\{log(n_{1}), log(n_{2})\})$
+This operation has then complexity:\\$O(max\{lenght(n_{1}), length(n_{2})\}) = O(max\{log(n_{1}), log(n_{2})\})$
 
 \subsection{Summation of $n$ numbers}
 The summation of $n$ numbers is simply the sum of two numbers, but performed $n - 1$ times. \newline
 Let's assume that $\forall i \in [1,n]: M \geq a_{i}$. \newline
-The complexity of this operation is then $O((n-1) \cdot log(M)) = O(n)$. \newline
+The complexity of this operation is then:\\$O((n-1) \cdot log(M)) = O(n)$. \newline
 
 \subsection{Product of 2 numbers}
 If we consider the classic implementation of the binary multiplication, that is just a sequence of summations. \newline
@@ -297,7 +297,7 @@ Let's consider the cost of this operation:
 
 \chapter{Elements of Number Theory}
 
-\section{Elements of Number Theory}
+\section{Definitions of Number Theory}
 \subsection{The cyclic group $\mathbb{Z}_{n}^{*}$}
 The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as $\{a \in \mathbb{Z}_{n}: (a,n) = 1\}$.\newline
 The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that
@@ -306,25 +306,75 @@ For this reason, $\mathbb{Z}_{n}^{*}$ is also referred as $< g >$.\newline
 An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\alpha}]$,
  $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^\alpha$ is a power of a prime number.\newline
 
+\subsection{Pseudoprime number}
+For an integer $a > 1$, if a composite integer $x$ divides $ax-1 - 1$, then $x$ is called a \textbf{Fermat pseudoprime} to base $a$.\newline
+ In other words, a composite integer is a Fermat pseudoprime to base a if it successfully passes the Fermat primality test for the base $a$.
+
 \section{Reminders of Modular Arithmetic}
 \subsection{Little Fermat's Theorem}\label{little_fermat_th}
-\begin{itemize}
-    \item Let $p$ be a prime number.
-    \item Then, $a^{p-1} \equiv_{p} 1$.
-\end{itemize}
+\begin{theorem}[Little Fermat's Theorem]
+    Consider what follows:
+    \begin{itemize}
+        \item Let $p$ be a prime number and $p \nmid a$.
+        \item Then, $a^{p-1} \equiv_{p} 1$.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    \begin{itemize}
+        \item Let's consider $A = \{na \bmod p: n \in [1, p-1]\}$
+        \item $A$ has all distinct elements due to the Lemma~\ref{bijection_lemma}.
+        \item Then, $A = \mathbb{Z}_{n}^{*}$.
+        \item Then, $\Pi_{n \in A} n \equiv_{p} \Pi_{n=1}^{p-1} na \Rightarrow (p-1)! \equiv_{p} (p-1)!a^{p-1}$
+        \item Therefore, $a^{p-1} \equiv_{p} 1$ for the Wilson's Theorem~\ref{wilson_th}
+    \end{itemize}
+\end{proof}
+
+\subsection{Wilson's Theorem}\label{wilson_th}
+\begin{theorem}[Wilson's Theorem]
+    Consider what follows:
+    \begin{itemize}
+        \item Let $n \in \mathbb{N} \setminus \{0,1\}$
+        \item Then, $(n-1)! \equiv_{n} -1$.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    The proof is by induction on $n$:
+    \begin{itemize}
+        \item \textbf{Base case}: $n = 2$\\
+        Trivially, $1! \equiv_{2} -1$
+        \item \textbf{Inductive step}:\\
+        The theorem is assumed to be true up until $n - 1$. Let's consider the case of $n$:\\
+        \begin{itemize}
+            \item Consider the polynomial $g(x) = (x-1)(x-2) \dots (x - (n-1))$.
+            \item $g$ has degree $p-1$ and costant term $(p-1)!$. It's roots are $[1,p-1]$.
+            \item Consider $h(x) = x^{p-1} - 1$. $h$ has also degree $p-1$ and leading term $x^{p-1}$.
+            \item Let $f(x) = g(x) - h(x)$.
+            \item Then, $f$ has degree at most $p - 2$ (since the leading terms cancel), and modulo $p$ also has the $n - 1$ roots $1, 2, ..., n - 1$.
+            \item But Lagrange's theorem says it cannot have more than $p - 2$ roots.
+            \item $\therefore f \equiv_{n} 0$.
+            \item Its costant term, $(n-1)! + 1 \equiv_{n} 0 \iff (n-1)! \equiv_{n} -1$
+        \end{itemize}
+    \end{itemize}
+\end{proof}
 
 \subsection{Euler-Fermat's Theorem}\label{euler_fermat_th}
-\begin{itemize}
-    \item Let $n \in \mathbb{Z}$ be a number.
-    \item Then, $a^{\varphi(n)} \equiv_{n} 1$.
-\end{itemize}
+\begin{theorem}[Euler-Fermat's Theorem]
+    Consider what follows:
+    \begin{itemize}
+        \item Let $n \in \mathbb{Z}$ be a number.
+        \item Then, $a^{\varphi(n)} \equiv_{n} 1$.
+    \end{itemize}
+\end{theorem}
 
 \subsection{Bézout's identity}
- \begin{itemize}
-     \item Let $a$ and $b$ be integers with greatest common divisor $d$.
-     \item Then there exist integers $x$ and $y$ such that $ax + by = d$.
-     \item Moreover, the integers of the form $az + bt$ are exactly the multiples of $d$.
- \end{itemize}
+\begin{theorem}[Bezout's identity]
+    Consider what follows:
+    \begin{itemize}
+        \item Let $a$ and $b$ be integers with greatest common divisor $d$.
+        \item Then there exist integers $x$ and $y$ such that $ax + by = d$.
+        \item Moreover, the integers of the form $az + bt$ are exactly the multiples of $d$.
+    \end{itemize}
+\end{theorem}
 
 \subsection{Chinese Reminder's Theorem}
 \begin{theorem}[Chinese Reminder's Theorem]
@@ -354,7 +404,7 @@ An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\
 \end{proof}
 
 \subsection{Bijection of a modular function Lemma}
-\begin{lemma}[Bijection of a modular function Lemma]
+\begin{lemma}[Bijection of a modular function Lemma]\label{bijection_lemma}
     Consider $a \in \mathbb{Z}_{n}^{*} and f: \mathbb{Z}_{n} \rightarrow \mathbb{Z}_{n}$.\newline
     Then, $f$ is a bijection.\newline
 \end{lemma}
