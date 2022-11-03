@@ -1,0 +1,26 @@
+\section{Miller-Rabin probabilistic primality algorithm}
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$n \in \mathbb{N}$, an \emph{odd} number}
+\KwResult{$r$}
+\caption{Miller-Rabin primality test}\label{alg:miller_rabin_ptest}
+Compute $s, d$ such that: $n - 1 = 2^{s} \cdot d$\;
+Randomly choose $a \in \mathbb{Z}_{n}^{*}$\;
+\If{$(a,n) > 1$}{
+    \Return{$n$ is composite}\;
+}
+$b \gets a^{d} \bmod n$\;
+\If{$b \equiv_{n} \pm 1$}{
+    \Return{$n$ is prime or spsp}\;
+}
+$e \gets 0$\;
+\While{$b \not\equiv_{n} \pm 1 \land e \leq s-2 $}{
+    $b \gets b^{2} \bmod n$
+}
+\If{$b \not\equiv_{n} 1$}{
+    \Return{$n$ is composite}\;
+}
+\Return{$n$ is prime or spsp}\;
+\end{algorithm}
+\subsection{Computational complexity of the Miller-Rabin test}
+Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.. Although, we could test for each value in $\mathbb{Z}_{n}^{*}$, and that would cost $O(\varphi(n) \cdot log^{3}(n))$ b.o..
