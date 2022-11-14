@@ -24,3 +24,105 @@ $e \gets 0$\;
 \end{algorithm}
 \subsection{Computational complexity of the Miller-Rabin test}
 Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.. Although, we could test for each value in $\mathbb{Z}_{n}^{*}$, and that would cost $O(\varphi(n) \cdot log^{3}(n))$ b.o..
+
+\section{Primality Test in $\mathbb{P}$, AKS algorithm}
+\subsection{Useful Lemmas}
+\begin{lemma}[Newton's formula lemma]\label{newtown_form_lemma}
+    This lemma states as follows:\newline
+    n is prime $\iff (x + b)^{n} \equiv_{n} x^{n} + b$.
+\end{lemma}
+\begin{proof}
+    The proof is by identity:
+    \begin{itemize}
+        \item Consider that $(x + b)^{n} = \sum_{k=0}^{n} \binom{n}{k} b^{k}x^{n-k}$.
+        \item Consider that $\binom{n}{k} b^{k} \equiv_{n} 0$, when $0 < k < n$.
+    \end{itemize}
+\end{proof}
+
+\begin{lemma}[Nair's Lemma]\label{nair_lemma}
+    This lemma states as follows:
+    \begin{itemize}
+        \item Let $m \geq 7 \in \mathbb{Z}$
+        \item Let $LCM(x,y)$ be the Least Common Multiplier of $x$ and $y$.
+        \item Let $n \leq m \in \mathbb{Z}$.
+        \item Then, $LCM(m,n) \geq 2^{m}$.
+    \end{itemize}
+\end{lemma}
+
+\begin{lemma}[AKS Lemma]\label{aks_lemma}
+    This lemma states as follows:
+    \begin{itemize}
+        \item Let $n \geq 4$
+        \item Then, $\exists r \leq \lceil log_{2}^{5}(n) \rceil$ such that $d = ord(n)_{\mathbb{Z}_n^*} > log_2^2(n)$.
+    \end{itemize}
+\end{lemma}
+\begin{proof}
+    The proof is by \emph{contradiction}:
+    \begin{itemize}
+        \item Let $n \geq 4 \Rightarrow \lceil log_{2}^{5}(n) \rceil \geq 32$.
+        \item Let $V$ be $\lceil log_{2}^{5}(n) \rceil$.
+        \item Let \[\Pi \text{be} n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil}(n^{i} - 1) \].
+        \item Let $\nu$ be $\{s \in \{\, \dots, \nu\}: s \nmid \Pi\}$
+        \item Assume by contradiction that$ \nu = 0 $:
+        \begin{itemize}
+            \item Then, by definition: $\forall s \in \nu: s \nmid \Pi$.
+            \item Consider that $lcm\{1, \dots, V\} | \Pi$
+            \item Consider that:
+            \[\Pi \leq n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil}\] \newline
+            \[n^{i} =  n^{\lfloor log_{2}(V) \rfloor + \sum_{i=1}^{\lfloor log_{2}^{2}(n) \rfloor} i} = \] \newline
+            \[ n^{\lfloor log_{2}(V) \rfloor + \frac{1}{2} \lfloor log_{2}^{2}(n) \rfloor \cdot (\lfloor log_{2}^{2}(n) \rfloor + 1)}\]
+        \end{itemize}
+
+    \end{itemize}
+\end{proof}
+\subsection{Agrawal - Kayal - Saxema Theorem}
+\begin{theorem}[Agrawal - Kayal - Saxema Theorem]\label{aks_theorem}
+    Let $n \geq 4 \in \mathbb{N}$, and let $0 < r < n$ such that $(n,r) = 1$ and $order(n) > (log_{2}(n))^{2}$. Then:
+    \[
+    n \text{is prime} \iff
+         \begin{cases}
+           n \text{is not a perfect power} \\
+           \not\exists p \leq r \\
+           (x + b)^{n} \equiv_{(n, x^{r} - 1)} x^{n} + b \text{\, for every} b \in \mathbb{N} \text{ s.t. } 1 \leq b \leq \sqrt{n} \cdot log_{2}(n)
+         \end{cases}
+    \]
+\end{theorem}
+
+\subsection{AKS algorithm}
+\subsubsection{Pseudocode}
+\begin{algorithm}
+    \KwData{$n \in \mathbb{N}$}
+    \KwResult{$TRUE$ if $n$ is prime}
+    \caption{AKS primality test pseudocode}\label{alg:aks_pscd_ptest}
+    \If{$n = \alpha^{\beta} \text{, where } \alpha \text{, } \beta > 1 \in \mathbb{N}$}{\Return{$FALSE$}}
+    $r \gets \argmin_{x} (x,n) = 1$\;
+    $d \gets ord(n)_{\mathbb{Z}_{r}^{*}} > \lceil log_{2}^{2}(n) \rceil$\;
+    \If{$\exists b \leq r : 1 < (b,n) < n$}{\Return{$FALSE$}}\label{step_3_aks}
+    \If{$n \leq r$}{\Return{$TRUE$}}
+    \If{$\exists b \in \mathbb{N}: 1 \leq b \leq \sqrt{r} \cdot log_{2}(n) \land (x + b)^{n} \not\equiv_{(x^{r} - 1, n)} x^{n} + b$}{\Return{$FALSE$}}\label{step_5_aks}
+    \Return{$TRUE$}\;
+\end{algorithm}
+
+\begin{theorem}
+    The AKS algorithm for the primality test of a given number $n$ is correct.\newline
+    $n$ is prime $\iff$ the algorithm returns $TRUE$.
+\end{theorem}
+\begin{proof}
+    The proof examines the execution case by case.\newline
+    \begin{itemize}
+        \item Let's assume that $n$ is prime:
+        \begin{itemize}
+            \item Then, the algorithm cannot stop at step \ref{step_1_aks} or at step \ref{step_3_aks}.
+            \item By Lemma \ref{newtown_form_lemma}, $ (x + b)^{n} \equiv_{n} x^{n} + b \forall b \in \mathbb{Z} \therefore$ the algorithm cannot terminate at step \ref{step_5_aks}.
+            \item Therefore, the algorithm can only terminate at step \ref{step_4_aks} or \ref{step_6_aks}, so: $n$ is prime $\Rightarrow$ the algorithm returns $TRU£$.
+        \end{itemize}
+        \item Let's assume that the algorithm returns $TRUE$:
+        \begin{itemize}
+            \item Then, the algorithm has terminated at step \ref{step_4_aks} or \ref{step_6_aks}.
+            \item If the algorithm has terminated at step \ref{step_4_aks}, then $n \leq r$. Since we checked at \ref{step_3_aks} that $(b,n)$ is trivial $\forall b \leq r$, then $n$ has no trivial divisors, hence it's prime.
+            \item If the algorithm has terminated at step \ref{step_6_aks}, let's consider that at \ref{step_1_aks} and at \ref{step_3_aks} we verified that condition $1$ and $3$ of the Theorem \ref{aks_theorem} hold, respectively.
+            \item Then, it's verified that: the algorithm returns $TRUE \Rightarrow n$ is prime.
+        \end{itemize}
+        \item Therefore, is verified that $n$ is prime $\iff$ the algorithm returns $TRUE$.
+    \end{itemize}
+\end{proof}
