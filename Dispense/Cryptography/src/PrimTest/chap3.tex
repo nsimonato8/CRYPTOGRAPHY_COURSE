@@ -29,13 +29,31 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
 \subsection{Useful Lemmas}
 \begin{lemma}[Newton's formula lemma]\label{newtown_form_lemma}
     This lemma states as follows:\newline
-    n is prime $\iff (x + b)^{n} \equiv_{n} x^{n} + b$.
+    $n$ is prime $\iff (x + b)^{n} \equiv_{n} x^{n} + b$.
 \end{lemma}
 \begin{proof}
     The proof is by identity:
     \begin{itemize}
-        \item Consider that $(x + b)^{n} = \sum_{k=0}^{n} \binom{n}{k} b^{k}x^{n-k}$.
-        \item Consider that $\binom{n}{k} b^{k} \equiv_{n} 0$, when $0 < k < n$.
+        \item $(x + b)^{n} \equiv_{n} x^{n} + b \implies n$ is prime.
+        \begin{itemize}
+            \item By \emph{contradiction}:
+            \item Assume that $n$ is composite.
+            \item Then $\exists p | n$, where $p < n$ is a prime number.
+            \item Consider $\binom{n}{p} = \frac{n \cdot n-1 \cdot \dots \cdot n - p + 1}{p \cdot p - 1 \cdot \dots \cdot 1} > 1$
+            \item Assume that $p^{\alpha} || n$ then $p \nmid n$
+            \item Let $N = \prod_{i = n-p+1}^{n-1} i$.
+            \item Let $M = \prod_{i = 1}^{p-1} i$.
+            \item Then, $\binom{n}{p} = \frac{p^{\alpha} \cdot N}{p \cdot M} = p^{\alpha - 1} \cdot \frac{N}{M}$.
+            \item Since $(N,p) = (M, p) = 1$, then $p^{\alpha - 1} | \binom{n}{p} \land p^{\alpha} \nmid \binom{n}{p}$, therefore $p^{\alpha - 1} || \binom{n}{p}$ and $\binom{n}{p} \equiv_{p} 0$
+            \item But this is a \textbf{contradiction}, since $\binom{n}{p} \not\equiv_{p} 0$, therefore $n$ is prime.
+
+        \end{itemize}
+        \item $n$ is prime $\implies (x + b)^{n} \equiv_{n} x^{n} + b$
+        \begin{itemize}
+            \item $p | \binom{p}{k}$, for $k < n$.
+            \item Since $\binom{p}{k} \equiv_{p} 0$, then
+            \[(x + b)^{p} = \sum_{k=0}^{p} \binom{p}{k} x^{p-k} \cdot b^{k} \equiv_{p} x^{p} + b^{p} \equiv_{p} b\]
+        \end{itemize}
     \end{itemize}
 \end{proof}
 
@@ -68,13 +86,52 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
             \item Then, by definition: $\forall s \in \nu: s \nmid \Pi$.
             \item Consider that $lcm\{1, \dots, V\} | \Pi$
             \item Consider that:
-            \[\Pi \leq n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil}\] \newline
-            \[n^{i} =  n^{\lfloor log_{2}(V) \rfloor + \sum_{i=1}^{\lfloor log_{2}^{2}(n) \rfloor} i} = \] \newline
-            \[ n^{\lfloor log_{2}(V) \rfloor + \frac{1}{2} \lfloor log_{2}^{2}(n) \rfloor \cdot (\lfloor log_{2}^{2}(n) \rfloor + 1)}\]
+            \begin{align}
+                \Pi \leq n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil} n^{i} & =\\
+                n^{\lfloor log_{2}(V) \rfloor + \sum_{i=1}^{\lfloor log_{2}^{2}(n) \rfloor} i} & =  \\
+                n^{\lfloor log_{2}(V) \rfloor + \frac{1}{2} \lfloor log_{2}^{2}(n) \rfloor \cdot (\lfloor log_{2}^{2}(n) \rfloor + 1)}
+                & < \lfloor (log_{2}(n))^{4} \rfloor \\
+                & = 2^{log_{2}(n) \cdot \lfloor (log_{2}(n))^{4} \rfloor} \\
+                & < 2^{log_{2}^{5}(n)} \\
+                & < 2^{V}
+            \end{align}
+
+            \item So, $lcm\{1, \dots, V\} | \Pi \implies lcm\{1, \dots, V\} \leq \Pi < 2^{V}$
+            \item Since $V \geq 32$ and $lcm\{1, \dots, V\} \geq 2^{V}$ due to Lemma\ref{nair_lemma}, we have a \textbf{contradiction}.
+            \item Therefore, $\nu \neq 0$
+        \end{itemize}
+        \item Let then $r$ be $\operatorname{min}(\nu) \geq 2$
+        \item Assume that $q$ is a prime and $q | r$
+        \begin{itemize}
+            \item Consider also that $r | V$, since $r \leq V \implies q^{\alpha} | V \implies \alpha \leq \lfloor log_{2}(V) \rfloor$
+        \end{itemize}
+        \item Assume also that every $q | r$, also $q | n$.
+        \item Then, $r = \prod_{q | r} q^{\alpha} | \prod_{q | r} q^{\lfloor log_{2}(V) \rfloor} | \prod_{q | n} q^{\lfloor log_{2}(V) \rfloor}$,  where $p$ is a prime number.
+        \item Let $n$ be $\prod_{q | n} q^{\beta}$, where $\beta \geq 1$
+        \item Then, we have $n^{\lfloor log_{2}(V) \rfloor} = \prod_{q | n} q^{\beta \cdot \lfloor log_{2}(V) \rfloor}$
+        \item Before, we proved:
+        \[r | \prod_{q | n} q^{\lfloor log_{2}(V) \rfloor} | n^{\lfloor log_{2}(V) \rfloor} | \Pi\]
+        \item Therefore, $r | \Pi$, but $r \in \nu$, so $r \nmid \Pi$, that is a \textbf{Contradiction}.
+        \item Then not every prime divisor of $n$ is a prime divisor of $r$.
+        \item Consider that $\frac{r}{(r,n)} \in \nu \implies \frac{r}{(r,n)} \leq r = \operatorname{min}(\nu) \implies \frac{r}{(r,n)} = r \implies \frac{r}{(r,n)} = 1$
+        \begin{itemize}
+            \item By \emph{contradiction}:
+            \item Assume that $\frac{r}{(r,n)} \not\in \nu$
+            \item Then, $\frac{r}{(r,n)} | \Pi$
+            \item Let $r = \prod_{p|r} p^{\alpha}$
+            \item If $p | r \land p \nmid n \implies p | \frac{r}{(r,n)} \implies p^{\alpha} | \frac{r}{(r,n)}$
+            \item But, if $\frac{r}{(r,n)} | \Pi \implies p^{\alpha} | \prod_{i=1}^{\dots} (n^{i} - 1) | \Pi \implies r | \Pi$, that is a \textbf{contradiction}. Therefore, $\frac{r}{(r,n)} \in \nu$
+        \end{itemize}
+        \item So, $\operatorname{ord}(n)_{\mathbb{Z}_{r}^{*}} > \lfloor log_{2}^{2}(n) \rfloor$
+        \begin{itemize}
+            \item By \emph{contradiction}:
+            \item $\exists i \leq \lfloor log_{2}^{2}(n) \rfloor$ such that $n^{i} \equiv_{r} = 1$
+            \item $\implies r | \prod_{i = 1}^{\lfloor log_{2}^{2}(n) \rfloor}(n^{i} - 1) | \Pi$, but this is a \textbf{contradiction}.
         \end{itemize}
 
     \end{itemize}
 \end{proof}
+
 \subsection{Agrawal - Kayal - Saxema Theorem}
 \begin{theorem}[Agrawal - Kayal - Saxema Theorem]\label{aks_theorem}
     Let $n \geq 4 \in \mathbb{N}$, and let $0 < r < n$ such that $(n,r) = 1$ and $order(n) > (log_{2}(n))^{2}$. Then:
@@ -94,16 +151,17 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
     \KwData{$n \in \mathbb{N}$}
     \KwResult{$TRUE$ if $n$ is prime}
     \caption{AKS primality test pseudocode}\label{alg:aks_pscd_ptest}
-    \If{$n = \alpha^{\beta} \text{, where } \alpha \text{, } \beta > 1 \in \mathbb{N}$}{\Return{$FALSE$}}
+    \If{$n = \alpha^{\beta} \text{, where } \alpha \text{, } \beta > 1 \in \mathbb{N}$}{\Return{$FALSE$}}\label{step_1_aks}
     $r \gets \argmin_{x} (x,n) = 1$\;
-    $d \gets ord(n)_{\mathbb{Z}_{r}^{*}} > \lceil log_{2}^{2}(n) \rceil$\;
+    $d \gets ord(n)_{\mathbb{Z}_{r}^{*}} > \lceil log_{2}^{2}(n) \rceil$\;\label{step_2_aks}
     \If{$\exists b \leq r : 1 < (b,n) < n$}{\Return{$FALSE$}}\label{step_3_aks}
-    \If{$n \leq r$}{\Return{$TRUE$}}
+    \If{$n \leq r$}{\Return{$TRUE$}}\label{step_4_aks}
     \If{$\exists b \in \mathbb{N}: 1 \leq b \leq \sqrt{r} \cdot log_{2}(n) \land (x + b)^{n} \not\equiv_{(x^{r} - 1, n)} x^{n} + b$}{\Return{$FALSE$}}\label{step_5_aks}
-    \Return{$TRUE$}\;
+    \Return{$TRUE$}\;\label{step_6_aks}
 \end{algorithm}
 
-\begin{theorem}
+\subsubsection{Correctness}
+\begin{theorem}[Correctness of the AKS algorithm]
     The AKS algorithm for the primality test of a given number $n$ is correct.\newline
     $n$ is prime $\iff$ the algorithm returns $TRUE$.
 \end{theorem}
@@ -114,7 +172,7 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
         \begin{itemize}
             \item Then, the algorithm cannot stop at step \ref{step_1_aks} or at step \ref{step_3_aks}.
             \item By Lemma \ref{newtown_form_lemma}, $ (x + b)^{n} \equiv_{n} x^{n} + b \forall b \in \mathbb{Z} \therefore$ the algorithm cannot terminate at step \ref{step_5_aks}.
-            \item Therefore, the algorithm can only terminate at step \ref{step_4_aks} or \ref{step_6_aks}, so: $n$ is prime $\Rightarrow$ the algorithm returns $TRU£$.
+            \item Therefore, the algorithm can only terminate at step \ref{step_4_aks} or \ref{step_6_aks}, so: $n$ is prime $\implies$ the algorithm returns $TRU£$.
         \end{itemize}
         \item Let's assume that the algorithm returns $TRUE$:
         \begin{itemize}
@@ -126,3 +184,15 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
         \item Therefore, is verified that $n$ is prime $\iff$ the algorithm returns $TRUE$.
     \end{itemize}
 \end{proof}
+
+\subsubsection{Complexity}
+\begin{theorem}[Complexity of the AKS algorithm]
+    The AKS algorithm sustains the following costs for each step:
+    \begin{itemize}
+        \item Step \ref{step_1_aks} (checking if $n = a^{b}$) costs $O((log(n))^{3 + \epsilon})$ b.o..
+        \item Step \ref{step_2_aks} (picking $r$) has cost of $O((log(n))^{7 + \epsilon})$ b.o., in the worst case.
+        \item Step \ref{step_3_aks} (computing $(b,n)$ multiple times) has cost of $O((log(n))^{7 + \epsilon})$ b.o., in the worst case.
+        \item Step \ref{step_5_aks} (verifying that $(x + b)^{n} \not\equiv_{n} x^{n} + b$) has cost of $O(log(n) \cdot log(r))$ b.o.
+        \item The total cost of the AKS algorithm is then $O(r^{5/2} log^{4}(n))$ b.o.
+    \end{itemize}
+\end{theorem}
