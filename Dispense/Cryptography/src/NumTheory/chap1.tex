@@ -1,23 +1,31 @@
 \section{Definitions of Number Theory}
 \subsection{The cyclic group $\mathbb{Z}_{n}^{*}$}
-The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as $\{a \in \mathbb{Z}_{n}: (a,n) = 1\}$.\newline
-The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that
-$\forall a \in \mathbb{Z}_{n}^{*} \exists i: a \equiv_{m} g^{i}$.
+The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as
+\[
+\mathbb{Z}_{n}^{*} = \{a \in \mathbb{Z}_{n}: (a,n) = 1\}
+\]
+The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that:
+\[
+\forall a \in \mathbb{Z}_{n}^{*}: \exists i: a \equiv_{m} g^{i}
+\]
 For this reason, $\mathbb{Z}_{n}^{*}$ is also referred as $< g >$.\newline
 An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\alpha}]$,
- $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^\alpha$ is a power of a prime number.\newline
-
+ $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^{\alpha}$ is a power of a prime number.\newline
 
 \subsection{Pseudoprime number}
-For an integer $a > 1$, if a composite integer $x$ divides $ax-1 - 1$, then $x$ is called a \textbf{Fermat pseudoprime} to base $a$.\newline
+For an integer $a > 1$, if a composite integer $x$ divides $a^{x-1} - 1$, then $x$ is called a \textbf{Fermat pseudoprime} to base $a$.
+\[
+x \text{ is spsp(a) } \iff x|a^{x - 1} - 1
+\]
 In other words, a composite integer is a Fermat pseudoprime to base a if it successfully passes the Fermat primality test for the base $a$.\newline
- $x$ is $spsp(a)$ is a predicate, that means that some $x$ is a \emph{strong pseudoprime number in base $a$}.
+$x$ is $spsp(a)$ is a predicate, that means that some $x$ is a \emph{strong pseudoprime number in base $a$}.
 
 \subsection{Carmichael numbers}
 Carmichael numbers are defined as follows:
 \begin{itemize}
     \item Let $n$ be a composite number;
-    \item Then, if $b^{n} \equiv_{n} b$, then $b$ is a \textbf{Carmichael number}.
+    \item Then:
+    \[b^{n} \equiv_{n} b \implies b \text{ is a \textbf{Carmichael number}}\]
 \end{itemize}
 
 \section{Reminders of Modular Arithmetic}
@@ -26,16 +34,16 @@ Carmichael numbers are defined as follows:
     Consider what follows:
     \begin{itemize}
         \item Let $p$ be a prime number and $p \nmid a$.
-        \item Then, $a^{p-1} \equiv_{p} 1$.
+        \item Then \[a^{p-1} \equiv_{p} 1\]
     \end{itemize}
 \end{theorem}
 \begin{proof}
     \begin{itemize}
-        \item Let's consider $A = \{na \bmod p: n \in [1, p-1]\}$
-        \item $A$ has all distinct elements due to the Lemma~\ref{bijection_lemma}.
-        \item Then, $A = \mathbb{Z}_{n}^{*}$.
-        \item Then, $\prod\limits_{n \in A} n \equiv_{p} \prod\limits_{n=1}^{p-1} na \Rightarrow (p-1)! \equiv_{p} (p-1)!a^{p-1}$
-        \item Therefore, $a^{p-1} \equiv_{p} 1$ for the Wilson's Theorem~\ref{wilson_th}
+        \item Let's consider: \[A = \{na \bmod p: n \in [1, p-1]\}\]
+        \item $A$ has all distinct elements due to the Bijection Lemma (Lemma~\ref{bijection_lemma}).
+        \item Then \[A = \mathbb{Z}_{n}^{*}\]
+        \item Then, \[\prod\limits_{n \in A} n \equiv_{p} \prod\limits_{n=1}^{p-1} na \implies (p-1)! \equiv_{p} (p-1)!a^{p-1}\]
+        \item Therefore, $a^{p-1} \equiv_{p} 1$ for the Wilson's Theorem~\ref{wilson_th}.
     \end{itemize}
 \end{proof}
 
@@ -44,25 +52,25 @@ Carmichael numbers are defined as follows:
     Consider what follows:
     \begin{itemize}
         \item Let $n \in \mathbb{N} \setminus \{0,1\}$
-        \item Then, $(n-1)! \equiv_{n} -1$.
+        \item Then, \[(n-1)! \equiv_{n} -1\]
     \end{itemize}
 \end{theorem}
 \begin{proof}
     The proof is by induction on $n$:
     \begin{itemize}
-        \item \textbf{Base case}: $n = 2$\\
-        Trivially, $1! \equiv_{2} -1$
-        \item \textbf{Inductive step}:\\
-        The theorem is assumed to be true up until $n - 1$. Let's consider the case of $n$:\\
+        \item \textbf{Base case}: $n = 2$
+        \[1! \equiv_{2} -1\]
+        \item \textbf{Inductive step}:
+        The theorem is assumed to be true up until $n - 1$. Let's consider the case of $n$:
         \begin{itemize}
-            \item Consider the polynomial $g(x) = (x-1)(x-2) \dots (x - (n-1))$.
-            \item $g$ has degree $p-1$ and costant term $(p-1)!$. It's roots are $[1,p-1]$.
-            \item Consider $h(x) = x^{p-1} - 1$. $h$ has also degree $p-1$ and leading term $x^{p-1}$.
+            \item Consider the polynomial \[g(x) = (x-1)(x-2) \dots (x - (n-1))\]
+            \item $g$ has degree $p-1$ and costant term $(p-1)!$. It's roots are in $[1,p-1]$.
+            \item Consider \[h(x) = x^{p-1} - 1\] $h$ has also degree $p-1$ and leading term $x^{p-1}$.
             \item Let $f(x) = g(x) - h(x)$.
             \item Then, $f$ has degree at most $p - 2$ (since the leading terms cancel), and modulo $p$ also has the $n - 1$ roots $1, 2, ..., n - 1$.
             \item But Lagrange's theorem says it cannot have more than $p - 2$ roots.
-            \item $\therefore f \equiv_{n} 0$.
-            \item Its costant term, $(n-1)! + 1 \equiv_{n} 0 \iff (n-1)! \equiv_{n} -1$
+            \item \[\therefore f \equiv_{n} 0\]
+            \item Its costant term, \[(n-1)! + 1 \equiv_{n} 0 \iff (n-1)! \equiv_{n} -1\]
         \end{itemize}
     \end{itemize}
 \end{proof}
@@ -72,7 +80,7 @@ Carmichael numbers are defined as follows:
     Consider what follows:
     \begin{itemize}
         \item Let $n \in \mathbb{Z}$ be a number.
-        \item Then, $a^{\varphi(n)} \equiv_{n} 1$.
+        \item Then, \[a^{\varphi(n)} \equiv_{n} 1\]
     \end{itemize}
 \end{theorem}
 
@@ -89,14 +97,18 @@ Carmichael numbers are defined as follows:
 \subsection{Chinese Reminder's Theorem}
 \begin{theorem}[Chinese Reminder's Theorem]
     Given a system of congruences:
-    \begin{itemize}
-        \item $x \equiv_{m_{1}} a_{1}$
-        \item $x \equiv_{m_{2}} a_{2}$
-        \item \dots
-        \item $x \equiv_{m_{r}} a_{r}$
-    \end{itemize}
-    In which each module is prime with each others, that is $\forall i \neq j: (m_{i}, m_{j}) = 1$,
-    then \textbf{there exists a simultaneous solution $x$ to all of the congruences}, and \textbf{any two solutions are congruent to one another modulo $M = m_{1}m_{2}\dots m_{r}$}.
+    \begin{align*}
+        x & \equiv_{m_{1}} a_{1} \\
+        x & \equiv_{m_{2}} a_{2} \\
+        \dots \\
+        x & \equiv_{m_{r}} a_{r}
+    \end{align*}
+    In which each module is prime with each others, that is:
+    \[
+    \forall i \neq j: (m_{i}, m_{j}) = 1
+    \]
+    then \textbf{there exists a simultaneous solution $x$ to all of the congruences}, and \textbf{any two solutions are congruent to one another modulo}.
+    \[M = m_{1}m_{2}\dots m_{r}\]
 \end{theorem}
 
 \begin{proof}
@@ -105,7 +117,7 @@ Carmichael numbers are defined as follows:
         \item Suppose that $x'$ and $x"$ are two solutions.
         \item Let $x = x' - x''$.
         \item Then x must be congruent to $0$ modulo each $m_{i}$ and hence modulo $M$.
-        \item Let $M_{i} = M/m_{i}$, to be the product of all of the moduli except for the i-th.
+        \item Let $M_{i} = \frac{M}{m_{i}}$, to be the product of all of the moduli except for the i-th.
         \item Then $GCD(m_{i}, M_{i}) = 1$ and therefore $\exists N_{i}: M_{i}N_{i} \equiv_{m_{i}} 1$.
         \item Set $x = \sum_{i}a_{i}M_{i}N_{i}$;
         \item Then, for each $i$ we see that the terms in the sum other than the i-th term are all divisible by $m_{i}$, because $m_{i} | M_{j}$ when $i \neq j$.
@@ -115,16 +127,23 @@ Carmichael numbers are defined as follows:
 
 \subsection{Bijection of a modular function Lemma}
 \begin{lemma}[Bijection of a modular function Lemma]\label{bijection_lemma}
-    Consider $a \in \mathbb{Z}_{n}^{*} and f: \mathbb{Z}_{n} \rightarrow \mathbb{Z}_{n}$.\newline
+    Consider:
+    \begin{itemize}
+        \item \[a \in \mathbb{Z}_{n}^{*}\]
+        \item \[f: \mathbb{Z}_{n} \rightarrow \mathbb{Z}_{n}\]
+    \end{itemize}
     Then, $f$ is a bijection.\newline
 \end{lemma}
 \begin{proof}
-    Part 1: $f$ is injective.\newline
+    Part 1: $f$ is injective.
     \begin{itemize}
         \item Assume $f(x_{1}) = f(x_{2}) \in \mathbb{Z}_{n} \iff ax_{1} \equiv_{n} ax_{2}$.
         \item Then $\exists k \in \mathbb{Z}: ax_{1} - ax_{2} = kn$.
-        \item Therefore, $a(x_{1} - x_{2}) = kn \iff a^{-1}a(x_{1} - x_{2}) = a^{-1}kn$\\
-        $\iff (x_{1} - x_{2}) = a^{-1}kn \iff x_{1} - x_{2} \equiv_{m} 0$.
+        \item Therefore,
+        \begin{align*}
+            a(x_{1} - x_{2}) = kn & \iff a^{-1}a(x_{1} - x_{2}) = a^{-1}kn\\
+            \iff (x_{1} - x_{2}) = a^{-1}kn & \iff x_{1} - x_{2} \equiv_{m} 0.
+        \end{align*}
         \item $\therefore x_{1} \equiv_{m} x_{2}$, so $f$ is an injection.
     \end{itemize}
     Part 2: $f$ is surjective.
@@ -140,38 +159,44 @@ Carmichael numbers are defined as follows:
 
 \subsection{Euler's $\varphi$ function Lemmas}
 \begin{lemma}[Sum of the prime divisors' $\varphi$-function]
-    $\forall n \in \mathbb{N} \backslash \{0\}: \sum_{\frac{n}{d}} \varphi(d) = n$, where $\frac{n}{d}$ is the set of prime divisors of $n$.\newline
+    \[\forall n \in \mathbb{N} \backslash \{0\}: \sum_{\frac{n}{d}} \varphi(d) = n\]
+    Where $\frac{n}{d}$ is the set of prime divisors of $n$.\newline
 \end{lemma}
 \begin{proof}
+    The proof is by \textbf{contradiction}:
     \begin{itemize}
-        \item Let $B$ be $\{\frac{h}{n}: h \in \mathbb{Z}_{n} \land n \in \mathbb{N} \}$.
-        \item Therefore, $B = \cup_{\frac{n}{d}}\{a \in \{1, \dots, n\} \land (a,d) = 1\}$.
-        \item Then, $n = |B| = \sum_{\frac{d}{n}} \varphi(d)$.
-        \item Consider $(a_{1}, d_{1}) = 1 \land (a_{2}, d_{2}) = 1$\\, where $d_{1}|n \land d_{2}|n$.
-        \item Then, $\frac{a_{1}}{d_{1}} = \frac{a_{2}}{d_{2}} \iff a_{1}d_{2} = a_{2}d_{1}$.
-        \item Then, $d_{1}|a_{1}d_{2} \Rightarrow d_{1}|d_{2} \land$\\
-        $d_{2}|a_{2}d_{1} \Rightarrow d_{2}|d_{1}$.
-        \item $\therefore d_{1} = d_{2}$. This is clearly a contradiction, because in $B$ each divisor is counted once.
+        \item Let $B$ be \[\{\frac{h}{n}: h \in \mathbb{Z}_{n} \land n \in \mathbb{N} \}\]
+        \item Therefore, \[B = \cup_{\frac{n}{d}}\{a \in \{1, \dots, n\} \land (a,d) = 1\}\]
+        \item Then, \[n = |B| = \sum_{\frac{d}{n}} \varphi(d)\]
+        \item Consider \[(a_{1}, d_{1}) = 1 \land (a_{2}, d_{2}) = 1 \text{, where} d_{1}|n \land d_{2}|n\]
+        \item Then, \[\frac{a_{1}}{d_{1}} = \frac{a_{2}}{d_{2}} \iff a_{1}d_{2} = a_{2}d_{1}\]
+        \item Then, \[d_{1}|a_{1}d_{2} \implies d_{1}|d_{2} \land
+        d_{2}|a_{2}d_{1} \implies d_{2}|d_{1}\]
+        \item Therefore,  $d_{1} = d_{2}$. This is clearly a \emph{contradiction}, because in $B$ each divisor is counted once.
     \end{itemize}
 \end{proof}
 
 \begin{lemma}[Number of divisors of a prime number's power]
     Let $p \in \mathbb{N}$  be a prime number, and $\alpha \in \mathbb{N}$.\\
-    Then, $\varphi(p^{\alpha}) = p^{\alpha - 1}(p - 1)$.\newline
+    Then, \[\varphi(p^{\alpha}) = p^{\alpha - 1}(p - 1)\]
 \end{lemma}
 \begin{proof}
-    The proof is by induction on $\alpha$.\newline
-    \textbf{Case base:} $\alpha = 1$\\
-    Then, $p = \sum_{\frac{d}{p}} \varphi(d) = \varphi(1) + \varphi(p) = 1 + \varphi(p)$\\
-    $\Rightarrow \varphi(p) = p - 1$.\newline
-    \textbf{Case base:} $\alpha = 2$\\
-    Then, $p^{2} = \sum_{\frac{d}{p^{2}}} \varphi(d) = \varphi(1) + \varphi(p) + \varphi(p^{2})$\\
-    $= 1 + p - 1 + \varphi(p^{2}) \Rightarrow \varphi(p^{2}) = p^{2} - p - 1 + 1$\\
-    $= p \cdot (p - 1) = p^{\alpha - 1}(p - 1)$\newline
-    \textbf{Inductive Step:} we can now assume that $\varphi(p^{\alpha}) = p^{\alpha - 1}(p - 1)$ up until $\alpha - 1$. We'll proceed now to demonstrate that this is also valid for each $\alpha$.\\
-    $p^{\alpha} = \sum_{\frac{d}{p^{\alpha}}} \varphi(d)$\\
-    $= \sum_{i = 0}^{\alpha - 1} \varphi(p^{i}) + \varphi(p^{\alpha})$\\
-    $\Rightarrow \varphi(p^{\alpha}) = p^{\alpha} - p^{\alpha - 1} = p^{\alpha - 1}(p - 1)$.\newline
+    The proof is by \textbf{induction} on $\alpha$.\newline
+    \textbf{Case base:} $\alpha = 1$
+    \[p = \sum_{\frac{d}{p}} \varphi(d) = \varphi(1) + \varphi(p) = 1 + \varphi(p) \implies \varphi(p) = p - 1\]
+    \textbf{Case base:} $\alpha = 2$
+    \begin{align*}
+        p^{2} & = \sum_{\frac{d}{p^{2}}} \varphi(d) = \varphi(1) + \varphi(p) + \varphi(p^{2})\\
+        & = 1 + p - 1 + \varphi(p^{2}) \implies \varphi(p^{2}) = p^{2} - p - 1 + 1\\
+        & = p \cdot (p - 1) = p^{\alpha - 1}(p - 1)
+    \end{align*}
+    \textbf{Inductive Step:} we can now assume that $\varphi(p^{\alpha}) = p^{\alpha - 1}(p - 1)$ up until $\alpha - 1$. We'll proceed now to demonstrate that this is also valid for each $\alpha$.
+    \begin{align*}
+        p^{\alpha} & = \sum_{\frac{d}{p^{\alpha}}} \varphi(d)\\
+        & = \sum_{i = 0}^{\alpha - 1} \varphi(p^{i}) + \varphi(p^{\alpha})\\
+        & \implies \varphi(p^{\alpha}) = p^{\alpha} - p^{\alpha - 1} = p^{\alpha - 1}(p - 1).
+    \end{align*}
+    \newline
 \end{proof}
 
 \subsection{Multiplicativity of the Euler's $\varphi$-function}
@@ -184,27 +209,27 @@ Carmichael numbers are defined as follows:
 \section{Theorems for Cryptography purposes}
 \subsection{The Miller-Rabin Theorem}
 \begin{theorem}[The Miller-Rabin Theorem]
-The \textbf{Miller-Rabin Theorem states that}:
-\begin{itemize}
-    \item Let $p$ be a prime number, such that $p \geq s$
-    \item Let $a \in \mathbb{N}: p \nmid a$
-    \item Let $p - 1 = 2^{s}d$, where $d$ is odd.
-    \item Then, $a^{d} \equiv_{p} 1 \lor a^{2^{r}d} \equiv_{p} -1$, for some $r \in \{0, 1, \dots, s-1\}$.
-\end{itemize}
+    The \textbf{Miller-Rabin Theorem states that}:
+    \begin{itemize}
+        \item Let $p$ be a prime number, such that $p \geq s$
+        \item Let $a \in \mathbb{N}: p \nmid a$
+        \item Let $p - 1 = 2^{s}d$, where $d$ is odd.
+        \item Then, \[a^{d} \equiv_{p} 1 \lor a^{2^{r}d} \equiv_{p} -1 \text{, for some r } \in \{0, 1, \dots, s-1\}\]
+    \end{itemize}
 \end{theorem}
 \begin{proof}
     Let's consider the first case:
     \begin{itemize}
         \item $x^{2} \equiv_{p} \pm 1$, for some $x \in \mathbb{N}$.
-        \item $a \in \mathbb{N} \land p \nmid a \Rightarrow a^{p-1} \equiv_{p} 1$, due to the Little Fermat's Theorem~\ref{little_fermat_th}.
-        \item Since $p - 1 = 2^{s} \cdot d \land 2 \nmid d \Rightarrow a^{p-1} \equiv_{p} (a^{\frac{p-1}{2}})^{2} \equiv_{p} 1$.
-        \item Then, is proved that $a^{\frac{p-1}{2}} \equiv_{p} \pm 1$
-        \item $\therefore a^{2^{r}d} \equiv_{p} -1$ for $r = s - 1$.
+        \item $a \in \mathbb{N} \land p \nmid a \implies a^{p-1} \equiv_{p} 1$, due to the Little Fermat's Theorem~\ref{little_fermat_th}.
+        \item Since \[p - 1 = 2^{s} \cdot d \land 2 \nmid d \implies a^{p-1} \equiv_{p} (a^{\frac{p-1}{2}})^{2} \equiv_{p} 1\]
+        \item Then, is proved that \[a^{\frac{p-1}{2}} \equiv_{p} \pm 1\]
+        \item Therefore: \[ a^{2^{r}d} \equiv_{p} -1 \text{for} r = s - 1\]
     \end{itemize}
     Consider now the case when $a^{2^{r}d} \equiv_{p} 1$:
     \begin{itemize}
-        \item If $s = 1$, then $\frac{p-1}{2} = d \Rightarrow a^{d} \equiv_{p} 1$
-        \item If $s = 2$, then $\frac{p-1}{4} = d \Rightarrow a^{d} \equiv_{p} 1$
+        \item If $s = 1$, then $\frac{p-1}{2} = d \implies a^{d} \equiv_{p} 1$
+        \item If $s = 2$, then $\frac{p-1}{4} = d \implies a^{d} \equiv_{p} 1$
         \item In general, for $s \geq 3$ we can consider successive square roots, until $r = 0$: then, $a^{\frac{p-1}{2^s}} \equiv_{p} 1$
     \end{itemize}
 \end{proof}
@@ -219,7 +244,7 @@ The \textbf{Miller-Rabin Theorem states that}:
 \end{theorem}
 The following lemma is a consequence of this theorem.
 \begin{lemma}[Corollary of the Miller's Theorem]
-    If $n$ is composite and odd, then $\exists a \in \mathbb{Z}_{n}^{*}: a \leq b$, such that $n$ is not $spsp(a)$.
+    If $n$ is composite and odd, then \[\exists a \in \mathbb{Z}_{n}^{*}: a \leq b \text{, such that $n$ is not $spsp(a)$} \]
 \end{lemma}
 
 \subsection{Ankey-Montgomery-Bach Theorem}
@@ -229,10 +254,10 @@ The following lemma is a consequence of this theorem.
         \item If the GRH\footnote{Generalized Riemann Hypothesis} holds;
         \item If $n$ is composite and odd;
     \end{itemize}
-    Then $\exists \in [2, 2 log^{2}(n)]$ such that $n$ is not $spsp(a)$.
+    Then, \[\exists \in [2, 2 log^{2}(n)] \text{ such that $n$ is not $spsp(a)$}\]
 \end{theorem}
 
 \section{Euler's Product Theorem}
 \begin{theorem}[Euler's Product Theorem]
-    If $\mathbb{R}e(s) > 1$, then $\zeta(s) = \sum_{n = 1}^{+ \infty} \frac{1}{n^{2}} = \prod\limits_{p}(1 - \frac{1}{p^{2}})^{-1}$.
+    If $ \mathbb{R}e(s) > 1$, then \[\zeta(s) = \sum_{n = 1}^{+ \infty} \frac{1}{n^{2}} = \prod\limits_{p}(1 - \frac{1}{p^{2}})^{-1}\]
 \end{theorem}

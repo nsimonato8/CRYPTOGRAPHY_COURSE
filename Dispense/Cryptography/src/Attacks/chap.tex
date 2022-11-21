@@ -1,0 +1,37 @@
+\section{Birthday Paradox}
+This Paradox is not an actual one, but is the result of a cognitive bias. \newline
+The idea is that in a room full of people, the probability of having no one with matching birthdays is actually lower than expected.\newline
+Consider what follows:
+\begin{itemize}
+    \item Let $n$ be the number of possible birthdays
+    \item Let $N$ be the number of people.
+    \item Let $S$ be a space $\{1, \dots, n\}^{N} \ni (c_{1}, \dots, c_{N})$.
+    \item The probability of a given combination of birthdays to happen is then:
+    \[
+    \mathbb{P}[(c_{1}, \dots, c_{N})] = n^{-N} = \frac{1}{|S|}
+    \]
+    \item Let's now compute the probability of having \textbf{no collisions}:
+    \begin{align*}
+        p(N) &= \mathbb{P}[\forall i \neq j: c_{i} \neq c_{j}] \\
+        &= \frac{\prod_{i=0}^{N-1} n - i}{n^{N}} \\
+        &= \frac{n \cdot (n-1) \cdot \dots \cdot (n - N + 1)}{n \cdot n \cdot \dots \cdot n} \\
+        &= \prod_{i=0}^{N-1} 1 - \frac{i}{n}
+    \end{align*}
+    \item Let'now compute the probability of having \textbf{at least one collision}:
+    \begin{align*}
+        q(N) &= 1 - p(N) \geq 1 - \epsilon \\
+        & \iff p(N) \leq \epsilon
+    \end{align*}
+    \item Let's now consider that:
+    \begin{align*}
+        p(N) = \prod_{i=0}^{N-1} 1 - \frac{i}{n} &\leq \prod_{i=0}^{N-1} e^{-\frac{i}{n}}\\
+        & = e^{\sum_{i=0}^{N-1}-\frac{i}{n}}\\
+        & = e^{-\frac{1}{n}\sum_{i=0}^{N-1}i}\\
+        & = e^{-\frac{(N)(N-1)}{2n}} \leq \epsilon
+    \end{align*}
+    Therefore,
+    \[
+        N \geq \frac{1+\sqrt{1 - 8n \operatorname{log}(\epsilon)}}{2} \simeq \sqrt{n |\operatorname{log}(\epsilon)|}
+    \]
+    \item So, when $N \simeq n$, then $\epsilon \simeq \frac{1}{2}$
+\end{itemize}
