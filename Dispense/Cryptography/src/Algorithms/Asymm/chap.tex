@@ -1,0 +1,50 @@
+\section{RSA}
+This section is dedicate to the entire RSA cryptosystem.
+\subsection{RSA cryptosystem}
+\begin{definition}[RSA cryptosystem]
+    The RSA cryptosystem is defined as $(\mathcal{M},\mathcal{C},\mathcal{K}, \mathscr{f}_{k_{e}},\mathscr{f}_{k_{d}}^{-1})$, where:
+    \begin{itemize}
+        \item $\mathcal{M} = \mathcal{C} = \mathbb{Z}_{n}^{*}$;
+        \item $\mathcal{K} = \mathbb{Z}_{\varphi(n)}^{*}$
+        \item $\mathscr{f}_{A}(x) = x^{e} \bmod n$
+        \item $\mathscr{f}_{A}^{-1}(y) = y^{d} \bmod n$
+    \end{itemize}
+    The meaning of the values $A, e, n$ will be explained in the following paragraph.
+\end{definition}
+
+\subsection{How RSA works}
+\subsubsection{Initialization}
+In order to communicate with the RSA cryptosystem, each user $A$ must follow these steps:
+\begin{enumerate}
+    \item Pick $p, q \in \mathbb{Z}: p \neq q$, two large prime numbers.
+    \item Compute $n = p \cdot q$;
+    \item Compute $\varphi(n) = (p - 1)(q - 1)$;
+    \item Pick $e \in \mathbb{N}: (e, \varphi(n)) = 1$
+    \item Compute $d \in \mathbb{Z}_{\varphi(n)}^{*}: e \cdot d \equiv_{\varphi(n)} 1$;
+    \item Then, $(e,n)$ will be $A$'s public key;
+    \item $(p, q, d)$ will then be his private key.
+\end{enumerate}
+\subsubsection{1 on 1 Communication}
+If the user $A$ wants to communicate to $B$, it must encrypt its message with $B$'s public key. Assume that $M$ is the clear-text message and that $C$ is the enciphered message. Then, $A$ computes as follows:
+\[
+    C = M^{e_{B}} \bmod n_{B} \\
+\]
+In order to read the ciphered message, $B$ has to decipher $C$ by using the deciphering function with his private key. $B$ computes as follows:
+\begin{align*}
+    C^{d_{B}} \bmod n_{B} &= (M^{e_{B}})^{d_{B}} \bmod n_{B} \\
+    &= M^{e_{B} \cdot d_{B}} \bmod n_{B} \\
+    &= M \bmod n_{B} \\
+    &= M
+\end{align*}
+This works because $e_{B}$ and $d_{B}$ are picked in such a way that they're each other's inverse in $\mathbb{Z}_{\varphi(n)}^{*}$, and therefore:
+\[
+    e_{B} \cdot d_{B} \equiv_{n_{B}} 1
+\]
+Also, since $n_{B}$ is supposed to be a really large number, is safe to assume that $M \leq n_{b}$, therefore:
+\[
+M \bmod n_{B} = M
+\] 
+
+\subsection{Broadcast communications with RSA}
+In order to communicate with multiple subjects, each user has just to repeat the Initialization and Communication procedure described before, one time for each other node in the network. \newline
+It's important that the user does not use the same public keys multiple times, in order to prevent Broadcast attacks.

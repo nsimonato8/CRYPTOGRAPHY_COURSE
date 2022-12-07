@@ -2,7 +2,6 @@
 \RestyleAlgo{ruled}
 \begin{algorithm}
 \KwData{$n \in \mathbb{N}$, an \emph{odd} number}
-\KwResult{$r$}
 \caption{Miller-Rabin primality test}\label{alg:miller_rabin_ptest}
 Compute $s, d$ such that: $n - 1 = 2^{s} \cdot d$\;
 Randomly choose $a \in \mathbb{Z}_{n}^{*}$\;
@@ -10,7 +9,7 @@ Randomly choose $a \in \mathbb{Z}_{n}^{*}$\;
     \Return{$n$ is composite}\;
 }
 $b \gets a^{d} \bmod n$\;
-\If{$b \equiv_{n} \pm 1$}{
+\If{$b \equiv_{n} \pm 1$}{ \Comment{Due to the Little Fermat's Theorem}
     \Return{$n$ is prime or spsp}\;
 }
 $e \gets 0$\;
@@ -23,7 +22,7 @@ $e \gets 0$\;
 \Return{$n$ is prime or spsp}\;
 \end{algorithm}
 \subsection{Computational complexity of the Miller-Rabin test}
-Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.. Although, we could test for each value in $\mathbb{Z}_{n}^{*}$, and that would cost $O(\varphi(n) \cdot log^{3}(n))$ b.o..
+Testing the primality for a single value of $a$ has cost of $O(\operatorname{log}^{3}(n))$ b.o.. Although, we could test for each value in $\mathbb{Z}_{n}^{*}$, and that would cost $O(\varphi(n) \cdot \operatorname{log}^{3}(n))$ b.o..
 
 \section{Primality Test in $\mathbb{P}$, AKS algorithm}
 \subsection{Useful Lemmas}
@@ -65,9 +64,9 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
     This lemma states as follows:
     \begin{itemize}
         \item Let $m \geq 7 \in \mathbb{Z}$
-        \item Let $\operatorname{LCM}(x,y)$ be the Least Common Multiplier of $x$ and $y$.
+        \item Let $\operatorname{lcm}(x,y)$ be the Least Common Multiplier of $x$ and $y$.
         \item Let $n \leq m \in \mathbb{Z}$.
-        \item Then: \[LCM(m,n) \geq 2^{m}\]
+        \item Then: \[\operatorname{lcm}(m,n) \geq 2^{m}\]
     \end{itemize}
 \end{lemma}
 
@@ -75,46 +74,46 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
     This lemma states as follows:
     \begin{itemize}
         \item Let $n \geq 4$
-        \item Then: \[\exists r \leq \lceil log_{2}^{5}(n) \rceil \text{ such that } d = ord(n)_{\mathbb{Z}_n^*} > log_2^2(n)\]
+        \item Then: \[\exists r \leq \lceil \operatorname{log}_{2}^{5}(n) \rceil \text{ such that } d = \mathcal{ord}(n)_{\mathbb{Z}_n^*} > \operatorname{log}_2^2(n)\]
     \end{itemize}
 \end{lemma}
 \begin{proof}
     The proof is by \emph{contradiction}:
     \begin{itemize}
-        \item Let $n \geq 4 \Rightarrow \lceil log_{2}^{5}(n) \rceil \geq 32$.
-        \item Let $V$ be $\lceil log_{2}^{5}(n) \rceil$.
-        \item Let \[\Pi = n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil}(n^{i} - 1) \].
+        \item Let $n \geq 4 \Rightarrow \lceil \operatorname{log}_{2}^{5}(n) \rceil \geq 32$.
+        \item Let $V$ be $\lceil \operatorname{log}_{2}^{5}(n) \rceil$.
+        \item Let \[\Pi = n^{\lfloor \operatorname{log}_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil \operatorname{log}_{2}^{2}(n) \rceil}(n^{i} - 1) \].
         \item Let $\nu$ be $\{s \in \{\, \dots, \nu\}: s \nmid \Pi\}$
         \item Assume by contradiction that$ \nu = 0 $:
         \begin{itemize}
             \item Then, by definition: $\forall s \in \nu: s \nmid \Pi$.
-            \item Consider that $lcm\{1, \dots, V\} | \Pi$
+            \item Consider that $\operatorname{lcm}\{1, \dots, V\} | \Pi$
             \item Consider that:
             \begin{align}
-                \Pi \leq n^{\lfloor log_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil log_{2}^{2}(n) \rceil} n^{i} & =\\
-                n^{\lfloor log_{2}(V) \rfloor + \sum_{i=1}^{\lfloor log_{2}^{2}(n) \rfloor} i} & =  \\
-                n^{\lfloor log_{2}(V) \rfloor + \frac{1}{2} \lfloor log_{2}^{2}(n) \rfloor \cdot (\lfloor log_{2}^{2}(n) \rfloor + 1)}
-                & < \lfloor (log_{2}(n))^{4} \rfloor \\
-                & = 2^{log_{2}(n) \cdot \lfloor (log_{2}(n))^{4} \rfloor} \\
-                & < 2^{log_{2}^{5}(n)} \\
+                \Pi \leq n^{\lfloor \operatorname{log}_{2}(V) \rfloor} \cdot \prod_{i=1}^{\lceil \operatorname{log}_{2}^{2}(n) \rceil} n^{i} & =\\
+                n^{\lfloor \operatorname{log}_{2}(V) \rfloor + \sum_{i=1}^{\lfloor \operatorname{log}_{2}^{2}(n) \rfloor} i} & =  \\
+                n^{\lfloor \operatorname{log}_{2}(V) \rfloor + \frac{1}{2} \lfloor \operatorname{log}_{2}^{2}(n) \rfloor \cdot (\lfloor \operatorname{log}_{2}^{2}(n) \rfloor + 1)}
+                & < \lfloor (\operatorname{log}_{2}(n))^{4} \rfloor \\
+                & = 2^{\operatorname{log}_{2}(n) \cdot \lfloor (\operatorname{log}_{2}(n))^{4} \rfloor} \\
+                & < 2^{\operatorname{log}_{2}^{5}(n)} \\
                 & < 2^{V}
             \end{align}
 
-            \item So, $lcm\{1, \dots, V\} | \Pi \implies lcm\{1, \dots, V\} \leq \Pi < 2^{V}$
-            \item Since $V \geq 32$ and $lcm\{1, \dots, V\} \geq 2^{V}$ due to Lemma\ref{nair_lemma}, we have a \textbf{contradiction}.
+            \item So, $\operatorname{lcm}\{1, \dots, V\} | \Pi \implies \operatorname{lcm}\{1, \dots, V\} \leq \Pi < 2^{V}$
+            \item Since $V \geq 32$ and $\operatorname{lcm}\{1, \dots, V\} \geq 2^{V}$ due to Lemma\ref{nair_lemma}, we have a \textbf{contradiction}.
             \item Therefore, $\nu \neq 0$
         \end{itemize}
         \item Let then $r$ be $\operatorname{min}(\nu) \geq 2$
         \item Assume that $q$ is a prime and $q | r$
         \begin{itemize}
-            \item Consider also that $r | V$, since $r \leq V \implies q^{\alpha} | V \implies \alpha \leq \lfloor log_{2}(V) \rfloor$
+            \item Consider also that $r | V$, since $r \leq V \implies q^{\alpha} | V \implies \alpha \leq \lfloor \operatorname{log}_{2}(V) \rfloor$
         \end{itemize}
         \item Assume also that every $q | r$, also $q | n$.
-        \item Then, $r = \prod_{q | r} q^{\alpha} | \prod_{q | r} q^{\lfloor log_{2}(V) \rfloor} | \prod_{q | n} q^{\lfloor log_{2}(V) \rfloor}$,  where $p$ is a prime number.
+        \item Then, $r = \prod_{q | r} q^{\alpha} | \prod_{q | r} q^{\lfloor \operatorname{log}_{2}(V) \rfloor} | \prod_{q | n} q^{\lfloor \operatorname{log}_{2}(V) \rfloor}$,  where $p$ is a prime number.
         \item Let $n$ be $\prod_{q | n} q^{\beta}$, where $\beta \geq 1$
-        \item Then, we have $n^{\lfloor log_{2}(V) \rfloor} = \prod_{q | n} q^{\beta \cdot \lfloor log_{2}(V) \rfloor}$
+        \item Then, we have $n^{\lfloor \operatorname{log}_{2}(V) \rfloor} = \prod_{q | n} q^{\beta \cdot \lfloor \operatorname{log}_{2}(V) \rfloor}$
         \item Before, we proved:
-        \[r | \prod_{q | n} q^{\lfloor log_{2}(V) \rfloor} | n^{\lfloor log_{2}(V) \rfloor} | \Pi\]
+        \[r | \prod_{q | n} q^{\lfloor \operatorname{log}_{2}(V) \rfloor} | n^{\lfloor \operatorname{log}_{2}(V) \rfloor} | \Pi\]
         \item Therefore, $r | \Pi$, but $r \in \nu$, so $r \nmid \Pi$, that is a \textbf{Contradiction}.
         \item Then not every prime divisor of $n$ is a prime divisor of $r$.
         \item Consider that $\frac{r}{(r,n)} \in \nu \implies \frac{r}{(r,n)} \leq r = \operatorname{min}(\nu) \implies \frac{r}{(r,n)} = r \implies \frac{r}{(r,n)} = 1$
@@ -126,11 +125,11 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
             \item If $p | r \land p \nmid n \implies p | \frac{r}{(r,n)} \implies p^{\alpha} | \frac{r}{(r,n)}$
             \item But, if $\frac{r}{(r,n)} | \Pi \implies p^{\alpha} | \prod_{i=1}^{\dots} (n^{i} - 1) | \Pi \implies r | \Pi$, that is a \textbf{contradiction}. Therefore, $\frac{r}{(r,n)} \in \nu$
         \end{itemize}
-        \item So, $\operatorname{ord}(n)_{\mathbb{Z}_{r}^{*}} > \lfloor log_{2}^{2}(n) \rfloor$
+        \item So, $\operatorname{ord}(n)_{\mathbb{Z}_{r}^{*}} > \lfloor \operatorname{log}_{2}^{2}(n) \rfloor$
         \begin{itemize}
             \item By \emph{contradiction}:
-            \item $\exists i \leq \lfloor log_{2}^{2}(n) \rfloor$ such that $n^{i} \equiv_{r} = 1$
-            \item $\implies r | \prod_{i = 1}^{\lfloor log_{2}^{2}(n) \rfloor}(n^{i} - 1) | \Pi$, but this is a \textbf{contradiction}.
+            \item $\exists i \leq \lfloor \operatorname{log}_{2}^{2}(n) \rfloor$ such that $n^{i} \equiv_{r} = 1$
+            \item $\implies r | \prod_{i = 1}^{\lfloor \operatorname{log}_{2}^{2}(n) \rfloor}(n^{i} - 1) | \Pi$, but this is a \textbf{contradiction}.
         \end{itemize}
 
     \end{itemize}
@@ -138,13 +137,13 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
 
 \subsection{Agrawal - Kayal - Saxema Theorem}
 \begin{theorem}[Agrawal - Kayal - Saxema Theorem]\label{aks_theorem}
-    Let $n \geq 4 \in \mathbb{N}$, and let $0 < r < n$ such that $(n,r) = 1$ and $order(n) > (log_{2}(n))^{2}$. Then:
+    Let $n \geq 4 \in \mathbb{N}$, and let $0 < r < n$ such that $(n,r) = 1$ and $order(n) > (\operatorname{log}_{2}(n))^{2}$. Then:
     \[
     n \text{is prime} \iff
          \begin{cases}
-           n \text{is not a perfect power} \\
+           n \text{ is not a perfect power } \\
            \not\exists p \leq r \\
-           (x + b)^{n} \equiv_{(n, x^{r} - 1)} x^{n} + b \text{\, for every} b \in \mathbb{N} \text{ s.t. } 1 \leq b \leq \sqrt{n} \cdot log_{2}(n)
+           (x + b)^{n} \equiv_{(n, x^{r} - 1)} x^{n} + b \text{, for every } b \in \mathbb{N} \text{ s.t. } 1 \leq b \leq \sqrt{n} \cdot \operatorname{log}_{2}(n)
          \end{cases}
     \]
 \end{theorem}
@@ -156,10 +155,10 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
     \caption{AKS primality test pseudocode}\label{alg:aks_pscd_ptest}
     \If{$n = \alpha^{\beta} \text{, where } \alpha \text{, } \beta > 1 \in \mathbb{N}$}{\Return{$FALSE$}}\label{step_1_aks}
     $r \gets \argmin_{x} (x,n) = 1$\;
-    $d \gets ord(n)_{\mathbb{Z}_{r}^{*}} > \lceil log_{2}^{2}(n) \rceil$\;\label{step_2_aks}
+    $d \gets \mathcal{ord}(n)_{\mathbb{Z}_{r}^{*}} > \lceil \operatorname{log}_{2}^{2}(n) \rceil$\;\label{step_2_aks}
     \If{$\exists b \leq r : 1 < (b,n) < n$}{\Return{$FALSE$}}\label{step_3_aks}
     \If{$n \leq r$}{\Return{$TRUE$}}\label{step_4_aks}
-    \If{$\exists b \in \mathbb{N}: 1 \leq b \leq \sqrt{r} \cdot log_{2}(n) \land (x + b)^{n} \not\equiv_{(x^{r} - 1, n)} x^{n} + b$}{\Return{$FALSE$}}\label{step_5_aks}
+    \If{$\exists b \in \mathbb{N}: 1 \leq b \leq \sqrt{r} \cdot \operatorname{log}_{2}(n) \land (x + b)^{n} \not\equiv_{(x^{r} - 1, n)} x^{n} + b$}{\Return{$FALSE$}}\label{step_5_aks}
     \Return{$TRUE$}\;\label{step_6_aks}
 \end{algorithm}
 
@@ -192,10 +191,10 @@ Testing the primality for a single value of $a$ has cost of $O(log^{3}(n))$ b.o.
 \begin{theorem}[Complexity of the AKS algorithm]
     The AKS algorithm sustains the following costs for each step:
     \begin{itemize}
-        \item Step \ref{step_1_aks} (checking if $n = a^{b}$) costs $O((log(n))^{3 + \epsilon})$ b.o..
-        \item Step \ref{step_2_aks} (picking $r$) has cost of $O((log(n))^{7 + \epsilon})$ b.o., in the worst case.
-        \item Step \ref{step_3_aks} (computing $(b,n)$ multiple times) has cost of $O((log(n))^{7 + \epsilon})$ b.o., in the worst case.
-        \item Step \ref{step_5_aks} (verifying that $(x + b)^{n} \not\equiv_{n} x^{n} + b$) has cost of $O(log(n) \cdot log(r))$ b.o.
-        \item The total cost of the AKS algorithm is then $O(r^{5/2} log^{4}(n))$ b.o.
+        \item Step \ref{step_1_aks} (checking if $n = a^{b}$) costs $O((\operatorname{log}(n))^{3 + \epsilon})$ b.o..
+        \item Step \ref{step_2_aks} (picking $r$) has cost of $O((\operatorname{log}(n))^{7 + \epsilon})$ b.o., in the worst case.
+        \item Step \ref{step_3_aks} (computing $(b,n)$ multiple times) has cost of $O((\operatorname{log}(n))^{7 + \epsilon})$ b.o., in the worst case.
+        \item Step \ref{step_5_aks} (verifying that $(x + b)^{n} \not\equiv_{n} x^{n} + b$) has cost of $O(\operatorname{log}(n) \cdot \operatorname{log}(r))$ b.o.
+        \item The total cost of the AKS algorithm is then $O(r^{5/2} \operatorname{log}^{4}(n))$ b.o.
     \end{itemize}
 \end{theorem}

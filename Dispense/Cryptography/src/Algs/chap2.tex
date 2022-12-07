@@ -203,8 +203,22 @@ The complexity of this operation is then $O(\operatorname{log}(x)\operatorname{l
 \subsection{Computing the order of an element in a cyclic group}
 The order of an element $a$ in $\mathbb{Z}_{p}^{*}$ ($m = order(a)$) is the minimum $m$ such that $a^{m} \equiv_{p} 1$.\newline
 This problem is computationally hard, because the most efficient way to compute $\operatorname{order}(a)$ is to brute force its value.\newline
-The only optimization available is that we don't have to compute the modulars powers of $a$ from scratch each time, but we can save the results at each iteration. Therefore, at each step we can only compute the modular product $(a^{p-1} \cdot a) \bmod p$, that has a cost $O(\operatorname{log}^{2}(p))$.
+The only optimization available is that we don't have to compute the modulars powers of $a$ from scratch each time, but we can save the results at each iteration. \newline
+Therefore, at each step we can only compute the modular product $(a^{p-1} \cdot a) \bmod p$, that has a cost $O(\operatorname{log}^{2}(p))$.
 The cost of this algorithm is then $O(order(a) \cdot \operatorname{log}^{2}(p))$, because we have to compute $a^{i} \bmod p$ for each attempt to find $order(a)$.
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$a, p$}
+\KwResult{$order_{p}(a)$}
+\caption{The Extended Euclidean Algorithm}\label{alg:OrdElemGrp}
+$x \gets a$\;
+$ord \gets 1$\;
+\While{$x \not\equiv_{p} 1$}{
+            $x \gets x \cdot a$\;
+            $ord \gets ord + 1$\;
+    }
+\Return{$ord$}
+\end{algorithm}
 
 \subsection{Extended Euclidean Algorithm}
 The Extended Euclidean Algorithm is a variation of the classic Euclidean Algorithm, that computes the GCD between two numbers $a, b$. \newline
@@ -274,3 +288,14 @@ Let's consider the cost of this operation:
         = O(\operatorname{log}^{3 + \epsilon}) \text{, with } \epsilon \in (0,1)
     \end{align*}
 \end{itemize}
+
+\subsection{Efficient computation of the $\operatorname{lcm}{1, \dots, B + 1}$}
+Consider a number $B \in \mathbb{N}$. Assume that you know $M(B) := \operatorname{lcm}{1, \dots, B + 1}$. Then, you can easily obtain $M(B+1)$:
+\[
+M(B + 1) =
+     \begin{cases}
+       M(B) \text{ otherwise } \\
+       q M(B) \text{ if } q^{\alpha}|(B+1) \land q \nmid B
+     \end{cases}
+\]
+Assuming that $p$ is prime.

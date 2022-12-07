@@ -1,0 +1,20 @@
+\section{Cryptosystems}
+\subsection{Definitions}
+\begin{definition}[Cryptographic transformation]
+    A cryptographic transformation is defined as \textbf{any injective function} $\mathscr{f}$ such that:
+    \[\mathscr{f}: \mathcal{M} \rightarrow \mathcal{C}\]
+\end{definition}
+\begin{definition}[Enciphering and Deciphering functions]
+    An \textbf{Enciphering function} is a cryptographic transformation. Its inverse $\mathscr{f}^{-1}$ is called \textbf{Deciphering function} and is defined as:
+    \[\mathscr{f}^{-1}: \mathcal{C} \rightarrow \mathcal{M}\]
+\end{definition}
+\begin{definition}[Cryptosystem]
+    A \textbf{Cryptosystem} is a tuple $(\mathcal{M},\mathcal{C}, \mathcal{K}, \mathscr{f}_{k_{e}},\mathscr{f}_{k_{d}}^{-1})$, where:
+    \begin{itemize}
+        \item $\mathcal{M}$ is the space of clear-text messages;
+        \item $\mathcal{C}$ is the space of ciphered messages;
+        \item $\mathcal{K}$ is the space of the keys;
+        \item $\mathscr{f}_{k_e}$ is the enciphering function with key $k_{e}$;
+        \item $\mathscr{f}_{k_d}^{-1}$ is the deciphering function with key $k_{d}$.
+    \end{itemize}
+\end{definition}

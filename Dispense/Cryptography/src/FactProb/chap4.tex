@@ -70,11 +70,11 @@ If $N$ is odd it can be shown that $y = \frac{N - 1}{2}, x = \frac{N + 1}{2}$.
 $y \gets$ 1\;
 \Repeat{$y = \frac{N - 1}{2}$}{
     $x \gets N + y^{2}$\;
-    \If{$(\lfloor \sqrt{N + y^{2}}\rfloor)^{2} = N + y^{2}$}{
+    \If{$(\lfloor \sqrt{N + y^{2}}\rfloor)^{2} = N + y^{2}$}{}\Comment{Checks if $N + y^{2}$ is a perfect square}
     \Return{$x,y$}
-    }\Comment{Checks if $N + y^{2}$ is a perfect square}
     $y \gets y + 1$\;
 }
+\Return{$p = x + y, q = x - y$}
 \end{algorithm}
 Let's now consider the cost of this algorithm:
 \begin{itemize}
@@ -88,7 +88,7 @@ Let's now consider the cost of this algorithm:
 \end{itemize}
 
 \subsection{Pollard's rho-method}
-The Pollard's $\rho$-method tries to factorize a number $N$, by attempting to find a collision when applying multiple times the same function. That can be summarized as follows:
+The Pollard's $\rho$-method tries to factorize a number $N$, by attempting to find a collision when applying the same function multiple times. That can be summarized as follows:
 \begin{itemize}
     \item Let $F: \mathbb{Z}_{N}^{*} \rightarrow \mathbb{Z}_{N}^{*}$.
     \item Let $x_{0} \in \mathbb{Z}_{N}^{*}$ be a randomly chosen seed.
@@ -101,13 +101,13 @@ Let's now investigate why this algorithm is correct:
     \item Build a sequence of $T$ numbers: $\{F_{x_{0}}\}_{k \leq T \in \mathbb{N}}$
     \item Assume that exists a collision, so:
     \begin{align*}
-        \exists F^{(i)}(x_{0}) \equiv_{p} F^{(j)}(x_{0}) \\
-        \iff p | F^{(i)}(x_{0}) - F^{(j)}(x_{0}) \\
-        \iff (p, F^{(i)}(x_{0}) - F^{(j)}(x_{0})) > 1
+        \exists F^{(i)}(x_{0}) \equiv_{p} F^{(j)}(x_{0}) & \\
+        & \iff p | F^{(i)}(x_{0}) - F^{(j)}(x_{0}) \\
+        & \iff (p, F^{(i)}(x_{0}) - F^{(j)}(x_{0})) > 1
     \end{align*}
     \item Due to the Birthday Paradox, we know that:
     \begin{align*}
-        \mathbb{P}[\exists F^{(i)}(x_{0}) \equiv_{p} F^{(j)}(x_{0})] = \frac{1}{2} \text{ when } T \leq \sqrt{p} \\
+        \mathbb{P}[\exists F^{(i)}(x_{0}) \equiv_{p} F^{(j)}(x_{0})] = \frac{1}{2} \text{, when } T \leq \sqrt{p} \\
         \text{Since } p|N \implies p \leq \sqrt{N} \implies T = O(\sqrt[4]{N})
     \end{align*}
     \item Therefore, probably we will find the collision.
@@ -140,4 +140,100 @@ $y_{2} \gets F(y_{1})$\;
 }
 \end{algorithm}
 
+\subsection{Pollard's $p - 1$ method}
+This method is an alternative to the $\rho$-method. Consider what follows:
+\begin{itemize}
+    \item Let $N$ be an odd number.
+    \item Choose $a \in \mathbb{Z}_{N}^{*}$.
+    \item Recall that due to the Little Fermat Theorem (\ref{little_fermat_theorem}):
+    \[
+    p \text{ is prime } \iff a^{k} \equiv_{p} 1
+    \]
+    When $k$ is a multiple of $p-1$.
+    \item Therefore:
+    \[p | (a^{k} - 1, N)\]
+    \item So, we can assume that if $p | N$, then:
+    \[
+    p - 1 = \prod_{q} q^{\alpha}
+    \]
+    Where $q$ is prime, and $\alpha$ is a generic exponent.
+    \item Also, we assume that:
+    \[\exists B \in \mathbb{N}: p | N \land (q^{\alpha}| p - 1 \implies q^{\alpha} \leq B)\]
+\end{itemize}
+ The algorithm \ref{alg:pollard_p-1_method} resumes the method proposed by Pollard. \newline
+ The cost of this algorithm can be estimated as follows:
+ \begin{itemize}
+     \item Step \ref{pol_p_step_1} costs $O(B^{2} \operatorname{log}^{2}(B))$;
+     \item Step \ref{pol_p_step_2} costs $O(\operatorname{log}^{2}(N))$;
+     \item Step \ref{pol_p_step_3} costs $O(\operatorname{log}^{2}(N)\operatorname{log}(k))$;
+     \item The total cost is then $O(B^{2} \operatorname{log}^{2}(B))$ per attempt.
+ \end{itemize}
+
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$N \in \mathbb{N}$}
+\KwResult{List of $d$, non-trivial factors of $N$}
+\caption{Pollard's $p-1$ method}\label{alg:pollard_p-1_method}
+$B$ is randomly chosen\label{pol_p_step_0}\;
+$k \gets B!$\;\label{pol_p_step_1}
+$a$ is randomly chosen in $\mathbb{Z}_{N}^{*}$\;\label{pol_p_step_2}
+$d \gets (N, a^{k} - 1)$\;\label{pol_p_step_3}
+\If{$d = 1 \lor d = N$}{
+    \GoTo{\ref{pol_p_step_2}}
+    OR\;
+    \GoTo{\ref{pol_p_step_0}}
+}
+\end{algorithm}
+
 \subsection{Pomerance's quadratic sieve}
+This algorithm is subexponential, and performs the factorization of a given number in $O(\operatorname{exp}(c_{1}\sqrt{\operatorname{log}(N)\operatorname{log}(\operatorname{log}(N))}))$ b.o.
+\subsubsection{Kraithcik's idea}
+This algorithm follows the Kraithcik's idea, that can be seen as a generalization of the Fermat's Factoring method. It's summerized as follows:
+\begin{itemize}
+    \item Find a sequence of congruences:
+    \[A_{i} \equiv_{N} B_{i}\]
+    Where $A_{i} \neq B_{i}$.
+    \item Find the complete factorization for a large enough number of $A_{i}, B_{i}$.
+    \item Find a set $S$ of congruences built starting from the ones found previously, such that:
+    \begin{align*}
+        \prod_{i \in S'} A_{i} &\equiv_{N} X^{2} \\
+        \prod_{i \in S} B_{i} &\equiv_{N} Y^{2}
+    \end{align*}
+    And therefore $X^{2} \equiv_{N} Y^{2}$
+    \item Compute:
+    \[ d = (X - Y, N)\]
+    Since we know the factorization of $A_{i}$ (and $B_{i}$), we have that:
+    \begin{align*}
+        A_{i} = \prod_{p_{j} \leq B} p^{\alpha_{ij}}, \alpha_{ij} \in \mathbb{N} \\
+        \therefore A_{1} \cdot A_{2} = \prod_{p_{j} \in B} p^{\alpha_{1j} + \alpha_{2j}} \\
+        A_{1} \cdot A_{2} \text{ is a square } \iff \alpha_{1j} + \alpha_{2j} \text{ is even}
+    \end{align*}
+    We can know map this problem to a linear system, where each $A_{i}$ can be represented as a vector, in which each element is the exponent $\alpha_{i,j} \bmod 2$. \newline
+    We now have a matrix of $k = \pi(B)$ columns and $T = |S|$ rows, and we want to solve the system $\lambda \cdot v_{2}(A)= 0$.
+\end{itemize}
+\subsubsection{The algorithm}
+In order to better understand the algorithm, the following clarification are needed:
+\begin{itemize}
+    \item Let $A_{j} \in \mathbb{N}$ s.t.:
+    \[
+    Q(A_{j}) = \prod_{p \in \mathbb{B}}p^{\alpha_{p,j}}
+    \]
+    Where $\alpha_{p,j} \in \mathbb{N} \land k = |\mathbb{B}|$
+    \item Let $\mathbb{v}(A_{j}) = (\alpha_{2,j}, \alpha_{3,j}, \dots, \alpha_{p,j})$
+    \item Let $\mathbb{v}_{2}(A_{j}) = (\alpha_{2,j} \bmod 2, \alpha_{3,j} \bmod 2, \dots, \alpha_{p,j} \bmod 2)$
+\end{itemize}
+This algorithm has a cost of $O(\operatorname{exp}(c \sqrt{\operatorname{log}(N)\operatorname{log}(\operatorname{log}(N))}))$
+
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$N,B \in \mathbb{N}$}
+\KwResult{List of $d$, non-trivial factors of $N$}
+\caption{Pomerance's quadratic sieve}\label{alg:pomerance_sieve}
+$s \gets \lfloor \sqrt{N} \rfloor$\;
+Pick randomly $A \in \mathbb{N}$\;
+$Q(A) \gets (A + s)^{2} + N$\;
+$\mathbb{B} \gets \{2\} \cup \{p: p \text{ is prime } \land p \leq B \land p | Q(A)\}$\;
+$X \gets \sqrt{\prod_{i=1}^{m}(A_{i} + s)^{2} \bmod N}$\;
+$Y \gets \sqrt{\prod_{i=1}^{m} Q(A_{i}) \bmod N}$\;
+$d \gets (X - Y, N)$\;
+\end{algorithm}

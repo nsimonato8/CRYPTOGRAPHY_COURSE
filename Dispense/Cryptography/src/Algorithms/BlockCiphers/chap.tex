@@ -1,0 +1,125 @@
+\section{Definition}
+Given:
+\begin{itemize}
+    \item $\mathcal{l}$, the length of the block;
+    \item $\Sigma$, the alphabet;
+\end{itemize}
+A block cipher is a cryptosystem such that:
+\[M = \mathcal{C} = \Sigma^{\mathcal{l}}\]
+\begin{proposition}
+    Consider waht follows:\newline
+    The enciphering function of a block cypher is a permutation of $\Sigma^{\mathcal{l}}$.
+\end{proposition}
+\begin{proof}
+    The proof proceeds as follows:
+    \begin{itemize}
+        \item Let $\mathcal{f}: \Sigma^{\mathcal{l}} \rightarrow \Sigma^{\mathcal{l}}$.
+        \item Let $\mathcal{f}(m) = \mathcal{f}([p_{1}, p_{2}, \dots, p_{e}]) = \Pi(p_{1}, p_{2}, \dots, p_{e})$, where $p_{i} \in \Sigma$.
+        \item Then, let $\mathcal{f}^{-1}(c) = \mathcal{f}([c_{1}, c_{2}, \dots, c_{e}]) = \Pi(c_{1}, c_{2}, \dots, c_{e})$, where $c_{i} \in \Sigma$.
+        \item Let then $K_{E} = \Pi$ be the set of encyphering keys;
+        \item Let then $K_{D} = \Pi^{-1}$ be the set of decyphering keys;
+        \item Then, $|K| = (|\Sigma|^{\mathcal{l}})!$
+        \item Due to the Pigeonhole principle, if $\mathcal{f}$ is injective, then it's also surjective, and therefore a bijection.
+    \end{itemize}
+\end{proof}
+
+\section{Transimission methods}
+Since block cyphers encrypt just message of length $\mathcal{l}$, it's necessary two think of a way to send longer messages through a communication device.
+\subsection{Electronic Code Book mode (ECB)}
+Consider what follows:
+\begin{itemize}
+    \item Let $M \in \Sigma^{t}$ be the message, and $t = |M|$.
+    \item Let $\mathcal{l}$ be the length of the block, such that $\mathcal{l} \nmid t \land t > \mathcal{l}$.
+    \item $M$ is splited in blocks of length $\mathcal{l}$, and the remaining part is filled with garbage. This concatenation is called $M'$.
+    \item $M'$ is sent to the receiver.
+    \item If $M'$ is received in the correct order, the  message is received correctly.
+\end{itemize}
+\subsection{Cipher Block Chaining mode (CBC)}
+This method introduces a XOR encryption to the communication. \newline
+Consider what follows:
+\begin{itemize}
+    \item Let $\Sigma = \{0,1\}, M, C \in \{0,1\}^{\mathcal{l}}$
+    \item Let $\oplus$ be the XOR operator (as known as the sum in $\mathbb{Z}_{2}$).
+    \item Let $P \in \{0,1\}^{\mathcal{l}}$ the initial fixed plaintext, pre-agreed.
+    \item Assume that $|M| = k \cdot \mathcal{l}$.
+    \item Alice sends the ciphered message $C = [c_{0}, c_{1}, \dots, c_{k}]$ to Bob. That is:
+    \begin{align*}
+        \begin{cases}
+          c_{0} & = \mathcal{f}(P)\\
+          c_{j} & = \mathcal{f}(c_{j-1} \oplus m_{j}) \text{, for } 1 \leq j \leq k
+        \end{cases}
+    \end{align*}
+    \item In order to receive correctly the message, it's important that Bob receives correctly $c_{0}$ and computes $\mathcal{f}^{-1}(c_{0})$. If that matches the original $P$, then he can proceed by computing the other blocks:
+    \[m_{j} = c_{j-1} \oplus \mathcal{f}^{-1}(c_{j}), 1 \leq j \leq k\]
+    This works because:
+    \begin{align*}
+        c_{1} = \mathcal{f}(c_{0} \oplus m_{i}) & \land c_{0} = \mathcal{f}(c_{0}) \\
+        c_{0} \oplus \mathcal{f}^{-1}(c_{1}) & = c_{0} \oplus \mathcal{f}^{-1}(\mathcal{f}(c_{0 \oplus m_{1}})) \\
+        & = c_{0} \oplus c_{0} \oplus m_{1} = m_{1}
+    \end{align*}
+\end{itemize}
+\subsection{Cipher Feedback mode (CFB)}
+Let the common knowledge of the communication be:
+\begin{itemize}
+    \item $P$ an initial value;
+    \item $\mathcal{l}$, the length of the block.
+    \item $1 \leq r \leq \mathcal{l}$ be a number.
+\end{itemize}
+Then, let $M = [m_{1}, \dots, m_{t}]$ be the cleartext message, where:
+\[|m_{i}| = r \implies r | |M| \]
+The communication is executed as follows:
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\caption{Cipher FeedBack Mode communication (CFB) [Sender]}\label{alg:CFB_sender}
+$I_{1} \gets P \in \{0,1\}^{\mathcal{l}}$\;
+\For{$j \in 1, \dots, t$}{
+    $O_{j} \gets \mathcal{f}(I_{j})$\;
+    $u_{j} \gets O_{j} \bmod 2^{r}$\;
+    $c_{j} \gets m_{j} \oplus u_{j}$\;
+    $I_{j+1} \gets 2^{r} I_{j} + c_{j} \bmod 2^{\mathcal{l}}$\;
+}
+\Return{$C$}
+\end{algorithm}
+
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\caption{Cipher FeedBack Mode communication (CFB) [Receiver]}\label{alg:CFB_receiver}
+$I_{1} \gets P $\;
+\For{$j \in 1, \dots, t$}{
+    $O_{j} \gets \mathcal{f}(I_{j})$\;
+    $u_{j} \gets O_{j} \bmod 2^{r}$\;
+    $m_{j} \gets c_{j} \oplus u_{j}$\;
+    $I_{j+1} \gets 2^{r} I_{j} + c_{j} \bmod 2^{\mathcal{l}}$\;
+}
+\Return{$C$}
+\end{algorithm}
+
+\subsection{Output Feedback mode (OFB)}
+
+\section{Feistel's Ciphers}
+The Feistel's cipher cryptosystem is the predecessor of the AES. It is defined as follows:
+\begin{align*}
+    \Sigma = \{0,1\} \\
+    \mathcal{M} = \mathcal{C} = \mathcal{K} = \Sigma^{\mathcal{l}}\\
+    \mathcal{f}_{k}: \Sigma^{\mathcal{l}} \rightarrow \Sigma^{\mathcal{l}}\\
+    \mathcal{F}_{k}: \Sigma^{2\mathcal{l}} \rightarrow \Sigma^{2\mathcal{l}}
+\end{align*}
+This cipher loops the enciphering function $F$ $r$ times, in which the blocks have a lenght of $2 \cdot \mathcal{l}$. $f$ is a sort of internal enciphering function. \newline
+There's also a key generating function, that has the following signature:
+\[\mathcal{K} \rightarrow \mathcal{K}^{r}\]
+The algorithm enciphers as follows:
+\begin{enumerate}
+    \item The cleartext message $M$ is composed of two parts: $L_{0}, R_{0}$, where $|L_{0}| = |R_{0}| = \mathcal{l}$.
+    \item Consider that $K_{i}$ is the $i$-th key produced.
+    \item For every $i: 1 \leq i \leq r$, $C_{i}$ is computed:
+    \[C_{i} = [L_{i}, R_{i}] = [R_{i-1}, L_{i-1} \oplus f_{K_{i}}(R_{i-1})\]
+    \item The message that is sent is $F_{K_{r}} = [R_{r}, L_{r}]$
+\end{enumerate}
+The deciphering method proceeds as follows:
+\begin{enumerate}
+    \item Note that the keys must be used in reverse order.
+    \item At each step, it is computed:
+    \[R_{i} \gets L_{i-1} \oplus f_{K_{i}}(R_{i-1}), L_{i} \gets R_{i-1}\]
+    \item Also, note that $f_{K_{i}} = f^{-1}_{K_{i}}$, since it's used with the XOR operator.
+\end{enumerate}
+An important remark is that the complexity of this algorithm depends on $f_{K}$

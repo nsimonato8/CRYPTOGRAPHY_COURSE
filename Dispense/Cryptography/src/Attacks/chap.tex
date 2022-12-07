@@ -1,4 +1,5 @@
-\section{Birthday Paradox}
+\section{Attacks' principles}
+\subsection{Birthday Paradox}
 This Paradox is not an actual one, but is the result of a cognitive bias. \newline
 The idea is that in a room full of people, the probability of having no one with matching birthdays is actually lower than expected.\newline
 Consider what follows:
@@ -35,3 +36,165 @@ Consider what follows:
     \]
     \item So, when $N \simeq n$, then $\epsilon \simeq \frac{1}{2}$
 \end{itemize}
+
+\section{Attacks to RSA}
+\subsection{Chosen-ciphertext/Known-plaintext attack}
+This attacks can happen when the attacker knows a portion or the complete plaintext $m$ associated to the ciphertext $c$.\newline
+The attacks proceeds as follows:
+\begin{itemize}
+    \item The attacker $E$ generates a random number $r \in \mathbb{Z}_{n_{A}}^{*}$, so $(r, n_{A}) = 1$. This quantity is called the "blinding factor".
+    \item $E$ asks $A$ to sign the quantity
+    \[r^{c_{A}} \cdot c \bmod n_{A}\]
+    In this way, $r^{c_{A}} \cdot c$ acts like a random message.
+    \item If $A$ signs $r^{c_{A}} \cdot c$, it gets:
+    \begin{align*}
+        f_{A}^{-1}(r^{c_{A}} \cdot c) &= (r^{c_{A}} \cdot c)^{d_{A}} \\
+        &= r^{c_{A}d_{A}} \cdot c^{d_{A}} \bmod n_{A} \\
+        &= r \cdot m \bmod n_{A}
+    \end{align*}
+    Since $r \cdot m$ looks random, it's hard to identify the attack here.
+    \item Now that $E$ has the quantity $r \cdot m \bmod n_{A}$, and since he produced $r$, he knows $r^{-1} \bmod n_{A}$.\\
+    Therefore, he can compute:
+    \[r^{-1} \cdot r \cdot m \bmod n_{A} = m\]
+\end{itemize}
+
+\subsection{Random fault attack}
+This attack on RSA can be done when a signature is computed incorrectly. \newline
+Recall that the digital signature with RSA works as follows.\newline
+Alice computes:
+\[s = m^{d} (\bmod n)\]
+Bob, to verify the signature, computes:
+\[s^{e} = m (\bmod n)\]
+Where:
+\begin{itemize}
+    \item $s$ is the signature;
+    \item $m$ is the cleartext message;
+    \item $d$ is the private key (exponent);
+    \item $n$ is the public key (modulus);
+    \item $e$ is the public key (exponent).
+\end{itemize}
+This attack exploits an optimization that is commonly used to compute the signature. \newline
+Since $n$ is the product of two big prime numbers $p, q$, the CRT (Chinese Reminder Theorem) can be used to compute two smaller modulus ($p, q$ respectivly), instead of a bigger one.
+\[
+     \begin{cases}
+       s_{1} \equiv m^{d_{p}} (\bmod p) \\
+       s_{2} \equiv m^{d_{q}} (\bmod q)
+     \end{cases}
+     \Longrightarrow s (\bmod pq)
+\]
+Consider now the case when $s_{2}$ is uncorrectly computed:
+\[
+     \begin{cases}
+       s_{1} \equiv m^{d_{p}} (\bmod p) \\
+       \hat{s_{2}} \equiv m^{d_{q}} (\bmod q)
+     \end{cases}
+     \Longrightarrow \hat{s} (\bmod pq)
+\]
+Then we have that:
+\[
+     \begin{cases}
+       s^{e} \equiv m (\bmod p) \\
+       \hat{s^{e}} \not\equiv m (\bmod q)
+     \end{cases}
+     \Longrightarrow
+     \begin{cases}
+       s^{e} - m \equiv 0 (\bmod p)\\
+       \hat{s^{e}} - m \not\equiv 0 (\bmod q)
+     \end{cases}
+     \Longrightarrow
+     \begin{cases}
+       p | s^{e} - m\\
+       q \nmid \hat{s^{e}} - m
+     \end{cases}
+\]
+Therefore, exists some $k$ such that:
+\[p \cdot k = \hat{s^{e}} - m\]
+Therefore, we can obtain easily $p$ by computing $gcd(s^{e} - m, N)$.
+
+\subsection{RSA basic attack}
+This attack is conducted when Alice sends to Bob1 and Bob2 the same message, by using the same public key (modulus). Assume what follows:
+\begin{itemize}
+    \item \[n_{X} = n_{Y}\]
+    \item \[(e_{X}, e_{Y}) = 1\]
+\end{itemize}
+Therefore, an intruder can compute $r,s$ such that:
+\[r \cdot e_{X} + s \cdot e_{Y} = 1\]
+By using the \emph{Extended Euclidean Algorithm} (recall that $e_{X}, e_{Y}$ are public). Since $e_{X}, e_{Y}$ are positive, then one between $r, s$ must be negative. Then:
+\begin{itemize}
+    \item The intruder computes $c_{1}^{-1} \bmod n_{X}$, using the \emph{E.E.A.}.
+    \item The intruder then computes:
+    \begin{align*}
+        (c_{1}^{-1})^{-r} \cdot c_{2}^{s} & =
+        (M^{-e_{X}})^{-r} \cdot M^{e_{Y} \cdot s} & =
+        M^{r \cdot e_{X} + s \cdot e_{Y}} \bmod n_{X} & =
+        M \bmod n_{X}
+    \end{align*}
+\end{itemize}
+Therefore, if different public keys aren't used, an intruder can easily intercept a broadcasted message.
+
+\subsection{Broadcast attack}
+In this attack, the user broadcasts a message by using different values for each receiver ($\forall i \neq j: n_{i} \neq n_{j}$), but uses the same value of $e$ for everyone. We'll assume that $r \geq e$.\newline
+The attack is conducted as follows:
+\begin{itemize}
+    \item The intruder collects $C_{1}, C_{2}, \dots, C_{r}$, the cyhpered texts.
+    \item The intruder uses a subset of the cyphered texts $D \subset \{C_{1}, C_{2}, \dots, C_{r}\}$. Consider $|D| = e$.
+    \item The intruder solves the system of equations
+    \[C \equiv_{n} C_{i}, \forall i = 1, 2, \dots, e\]
+    \item $C$ is the unique solution to the system, due to the Chinese Reminder Theorem.
+    \item Consider that:
+    \begin{align*}
+        M \in \mathbb{Z}_{n_{i}}^{*} \forall i = 1, 2, \dots, e \implies &\\
+        M < n_{i} \forall i = 1, 2, \dots, e \implies &\\
+        M^{2} < n_{1} \cdot n_{2} \implies &\\
+        M^{e} < \prod_{i=1}^{e} n_{i} = N \implies &\\
+        M^{e} = C \iff M = C^{\frac{1}{e}}
+    \end{align*}
+    Therefore, finding the solution in modulus $N$ is equivalent to find the solution to the system.
+\end{itemize}
+In order to prevent this kind of attack, when using RSA in broadcasts is important to use different values for $e,n$ for each user.
+
+\section{Attacks to Block Ciphers}
+\subsection{Known plaintext attack to an Affine block cipher}
+Consider the following cryptosystem:
+\begin{align*}
+    \Sigma = \mathbb{Z}_{N}
+    \mathcal{M} = \mathcal{C} = \mathbb{Z}_{N}^{\mathcal{l}} \\
+    K_{E} = (A, b), K_{D} = (A^{-1}, b)\\
+    \mathcal{f}: \mathbb{Z}_{N}^{\mathcal{l}} &\rightarrow \mathbb{Z}_{N}^{\mathcal{l}} \\
+    m &\rightarrow (A \cdot m + b) \bmod N \\
+    \mathcal{f}^{-1}: \mathbb{Z}_{N}^{\mathcal{l}} &\rightarrow \mathbb{Z}_{N}^{\mathcal{l}} \\
+    c &\rightarrow A^{-1}(c - b) \bmod N \\
+\end{align*}
+Where:
+\begin{itemize}
+    \item $N > 0 \in \mathbb{N}$;
+    \item $\mathcal{l} \geq 1 \in \mathbb{Z} $;
+    \item $A$ is an invertible $\mathcal{l} \times \mathcal{l}$ matrix, and $\forall 1 \leq i,j \leq \mathcal{l}: A_{i,j} \in \mathbb{Z}$.
+    \item $b \in \mathbb{Z}_{N}^{\mathcal{l}}$
+\end{itemize}
+Note that:
+\begin{itemize}
+    \item When $\mathcal{l} = 1, $ you get the Caesar's method;
+    \item When $A = I$\footnote{The identity matrix.} and $b \in \mathbb{Z}_{N}^{\mathcal{l}}$ you get the Vigenére's method.
+\end{itemize}
+The attacks is conducted as follows:
+\begin{enumerate}
+    \item The intruder generates $\mathcal{l} + 1$ plaintexts ($p_{0}, \dots, p_{\mathcal{l}}$);
+    \item The intruder collects the corrispondent ciphertexts ($c_{0}, \dots, c_{\mathcal{l}}$); Consider that:
+    \[c_{i} \equiv A \cdot p_{i} + b \bmod N\]
+    \item Now, consider that:
+    \[c_{i} - c_{0} \equiv A \cdot p_{i} + b - A \cdot p_{0} - b \bmod N\]
+    \item Then we have to matrixes:
+    \[C = (c_{1} - c_{0}, \dots, c_{\mathcal{l}} - c_{0}), P = (p_{1} - p_{0}, \dots, p_{\mathcal{l}} - p_{0})\]
+    \item So, we have that:
+    \[C \equiv A \cdot P \bmod N\]
+    \item If $(det P, N) = 1 \implies P$ is invertible, therefore:
+    \begin{align*}
+        C \cdot P^{-1} &\equiv A \cdot P \cdot P^{-1} \bmod N \\
+        A \equiv C \cdot P^{-1} \bmod N  \land b \equiv c_{0} - A \cdot p_{0} \bmod N
+    \end{align*}
+    \item Then, fixed $p_{0} \in \mathbb{Z}_{N}^{\mathcal{l}}$, let $v_{i}$ be a vector such that $v_{i} = (0, 0, \dots, 1, \dots, 0)$, where the $1$ is in the $i$-th position.
+    \item Now it's clear that $p_{i} = p_{0} + v_{i} \bmod N$.
+    \item Therefore, $P = I_{\mathcal{l}} = P^{-1}$.
+    \item $\implies C = A \cdot P \bmod N = A$
+\end{enumerate}
