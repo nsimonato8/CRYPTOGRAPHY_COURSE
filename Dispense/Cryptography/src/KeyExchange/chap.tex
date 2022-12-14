@@ -1,0 +1,17 @@
+\section{Three step protocol}
+\begin{definition}[Three step protocol]
+    Consider as follows:
+    \begin{itemize}
+        \item Let $k_{A}$ be the key of $A$, and $k_{B}$ be the key of $B$.
+        \item Let $L_{A}$ be the lock of $A$, and $L_{B}$ be the lock of $B$.
+        \item Assume that only the owner of the lock can open and close it.
+        \item Assume that the two locks are independent and both unbreakable.
+    \end{itemize}
+    Then:
+    \begin{itemize}
+        \item[\textbf{Step 1 - User $A$:}] $A$ inserts the lock $L_{A}$ and sends the box to $B$. Now the box has only the key of $A$.
+        \item[\textbf{Step 2 - User $B$:}] $B$ inserts the lock $L_{B}$ and sends the box to $B$. Now the box has both the locks.
+        \item[\textbf{Step 3 - User $A$:}] $A$ removes the lock $L_{A}$ and sends the box to $B$. Now the box has only the key of $B$. $B$ can now receive securely the box that contains the secret, because he's the only one that can open the lock $L_{B}$.
+    \end{itemize}
+\end{definition}
+This protocol can easily implemented by using the XOR operator as the enciphering function, as it satisfies the assumptions of this protocol.

@@ -1,6 +1,5 @@
-\section{Factoring Problem}
 This section explores the state of the art on the factoring problem, that is at the base of the attacks of numerous crypto algorithms. \newline
-\subsection{Eratostene's sieve}
+\section{Eratostene's sieve}
 In ancient times, a Greek mathematician named Eratostene came up with an intuitive factoring method, based on the extraction of the prime numbers up to a given $N$.
 \RestyleAlgo{ruled}
 \begin{algorithm}
@@ -37,7 +36,7 @@ Let's consider the cost of this algorithm:
     \end{align*}
 \end{itemize}
 
-\subsection{Trial division method}
+\section{Trial division method}
 The simplest algorithm to factorize a given number is to proceed by attempts. \newline
 This algorithm tries to do it in the most efficient way possible, but it is still less efficient than the methods that will be proposed later.
 \RestyleAlgo{ruled}
@@ -56,7 +55,7 @@ $c \gets$ \List{empty}\;
 If the list of prime numbers up to $\sqrt{N}$ is provided in input, it is necessary to compute, in the worst case, $\sqrt{N}$ reminders, each one at the cost of $\operatorname{log}^{2}(N)$. \newline
 Therefore, the cost of this method is $O(\sqrt{N} \operatorname{log}^{2}(N))$.
 
-\subsection{Fermat factoring method}
+\section{Fermat factoring method}
 This method aims to factorize a number $N$ in two numbers $p, q$, such that $N = p \cdot q$. Also, there must be some $x,y$ such that:
 \[
 N = x^{2} - y^{2} = (x + y)(x - y)
@@ -87,7 +86,7 @@ Let's now consider the cost of this algorithm:
     \item Therefore, the complexity of this algorithm is $O(\operatorname{log}^{A + 3}(N))$ b.o..
 \end{itemize}
 
-\subsection{Pollard's rho-method}
+\section{Pollard's rho-method}
 The Pollard's $\rho$-method tries to factorize a number $N$, by attempting to find a collision when applying the same function multiple times. That can be summarized as follows:
 \begin{itemize}
     \item Let $F: \mathbb{Z}_{N}^{*} \rightarrow \mathbb{Z}_{N}^{*}$.
@@ -140,7 +139,7 @@ $y_{2} \gets F(y_{1})$\;
 }
 \end{algorithm}
 
-\subsection{Pollard's $p - 1$ method}
+\section{Pollard's $p - 1$ method}
 This method is an alternative to the $\rho$-method. Consider what follows:
 \begin{itemize}
     \item Let $N$ be an odd number.
@@ -185,9 +184,9 @@ $d \gets (N, a^{k} - 1)$\;\label{pol_p_step_3}
 }
 \end{algorithm}
 
-\subsection{Pomerance's quadratic sieve}
+\section{Pomerance's quadratic sieve}
 This algorithm is subexponential, and performs the factorization of a given number in $O(\operatorname{exp}(c_{1}\sqrt{\operatorname{log}(N)\operatorname{log}(\operatorname{log}(N))}))$ b.o.
-\subsubsection{Kraithcik's idea}
+\subsection{Kraithcik's idea}
 This algorithm follows the Kraithcik's idea, that can be seen as a generalization of the Fermat's Factoring method. It's summerized as follows:
 \begin{itemize}
     \item Find a sequence of congruences:
@@ -211,7 +210,7 @@ This algorithm follows the Kraithcik's idea, that can be seen as a generalizatio
     We can know map this problem to a linear system, where each $A_{i}$ can be represented as a vector, in which each element is the exponent $\alpha_{i,j} \bmod 2$. \newline
     We now have a matrix of $k = \pi(B)$ columns and $T = |S|$ rows, and we want to solve the system $\lambda \cdot v_{2}(A)= 0$.
 \end{itemize}
-\subsubsection{The algorithm}
+\subsection{The algorithm}
 In order to better understand the algorithm, the following clarification are needed:
 \begin{itemize}
     \item Let $A_{j} \in \mathbb{N}$ s.t.:

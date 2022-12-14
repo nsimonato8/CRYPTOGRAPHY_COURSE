@@ -18,3 +18,68 @@
         \item $\mathscr{f}_{k_d}^{-1}$ is the deciphering function with key $k_{d}$.
     \end{itemize}
 \end{definition}
+
+\subsection{Different kinds of cryptosystems}
+\subsubsection{Affine cryptosystems}
+\begin{definition}[Affine cryptosystems]
+    A cryptosystem is defined \textbf{Affine} when the following conditions are met:
+    \begin{itemize}
+        \item It's a block cipher with lenght $l \geq 1$;
+        \item Its enciphering function depends on the key $k = (a,b)$ such that:\\
+        $f_{k}: \mathbb{Z}_{N}^{l} \rightarrow \mathbb{Z}_{N}^{l}$ and \\
+        $f_{k}(m) = A \cdot m + b \bmod N$
+        \item Its deciphering function depends on the key $k = (a,b)$ such that:\\
+        $f_{k}^{-1}: \mathbb{Z}_{N}^{l} \rightarrow \mathbb{Z}_{N}^{l}$ and \\
+        $f_{k}^{-1}(c) = A^{-1} \cdot (c - b) \bmod N$
+        \item $A$ is an invertible $l \times l$ matrix, $b$ is a vector in $\Sigma^{l}$.
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Perfect cryptosystems}
+\begin{definition}[Perfect cryptosystems]
+    A cryptosystem is called a \textbf{Perfect cryptosystem} if and only if:
+    \[\mathbb{P}(M = m|C = c) = \mathbb{P}(M = m)\]
+\end{definition}
+This means that a perfect cryptosystem is perfect if and only if the cleartext message and the ciphered message are independent.\newline
+Consider what follows:
+\begin{itemize}
+    \item Let $\mathbb{M}$ be the space of the cleartext messages, and $M$ the correspondant aleatory variable;
+    \item Let $\mathbb{C}$ be the space of the ciphered messages, and $C$ the correspondant aleatory variable;
+    \item Let $\mathbb{K}$ be the space of the keys, and $K$ the correspondant aleatory variable.
+\end{itemize}
+Then, we have the following situation:
+\begin{itemize}
+    \item $\mathbb{P}_{\mathbb{M}}(M = m)$ is the probability of having the cleartext message $m$.
+    \item $\mathbb{P}_{\mathbb{K}}(K = k)$ is the probability of having the key $k$.
+    \item $\mathbb{P}(C = c) = \sum_{k \in \mathbb{K}} \mathbb{P}_{\mathbb{K}}(K = k) \cdot \mathbb{P}_{\mathbb{M}}(M = f_{k}^{-1}(c))$ is the probability of having the enciphered message $c$.
+    \item Therefore, the probability of $c$ being the ciphered text of the cleartext message $m$ is given by:\\
+    $\mathbb{P}(C = c|M = m) = \sum_{k : } m = f_{k}^{-1}(c) \mathbb{P}_{\mathbb{K}}(K = k)$
+\end{itemize}
+The Shannon's theorem helps us to decide if a given cryptosystem is perfect:
+\begin{theorem}[Shannon's theorem]
+    Let $(\mathcal{M},\mathcal{C}, \mathcal{K}, \mathscr{f}_{k_{e}},\mathscr{f}_{k_{d}}^{-1})$ be a given cryptosystem.\newline Assume that $|\mathcal{M}| = |\mathcal{C}| = |\mathcal{K}|$ and $\mathbb{P}_{\mathbb{M}}(M = m) > 0 \forall m \in \mathcal{M}$. \newline
+    That cryptosystem is perfect if and only if:
+    \begin{itemize}
+        \item $\forall k \in \mathcal{K}: \mathbb{P}_{\mathbb{K}}(K = k) = \frac{1}{|\mathcal{K}|}$
+        \item $\forall m \in \mathcal{M}: \exists ! k \in \mathcal{K}: f_{k}(m) = c$
+    \end{itemize}
+\end{theorem}
+
+\paragraph{Vernam's cipher aka One Time Pad}
+This is currently the only known perfect cipher. \newline
+\begin{definition}[One Time Pad]
+    Consider what follows:
+    \begin{itemize}
+        \item Let $\mathcal{M} = \mathcal{C} = \mathcal{K} = \mathbb{Z}_{N}$
+        \item The key $k$ is randomly generated and only the two ends of the communication have it. \textbf{The key has the same length of the message} and \textbf{is used exactly one time}, hence the name "One Time Pad".
+        \item The sender sends the ciphered message $c = m \oplus k$ to the receiver and destroys the key.
+        \item The receiver deciphers the message: $m = c \oplus k$ and destroys the key.
+    \end{itemize}
+\end{definition}
+It's important that th keys are not leaked, and that, eventually, the keys needed for the communication are not exchanged by using the 3-step-protocol \ref{3-step-protocol}. This is because if an intruder collects all of the exchanged messages it may able to discover $m$ by applyng the XOR function to them:
+\begin{align*}
+    c_{1} &\oplus c_{2} &\oplus c_{3} &=\\
+    m \oplus k_{A} &\oplus m \oplus k_{A} \oplus k_{B} &\oplus m \oplus k_{B} &=\\
+    m &\oplus m &\oplus m &= m \\
+\end{align*}
+That's because the XOR operator is commutative and associative, and also because $\forall a: a \oplus a = 1$, therefore $k_{A}, k_{B}$ cancel themselves out.
