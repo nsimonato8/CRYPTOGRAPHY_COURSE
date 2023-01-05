@@ -19,8 +19,6 @@ In order to better identify the classes of complexity of the algorithms, the fol
     \item Sub-exponential time: $O(exp(c \cdot \operatorname{log}(n))^{\alpha})$ bit operations, where $c > 0, \alpha \in ]0, 1[$.
 \end{itemize}
 
-
-
 \section{Basic bit operations}
 \subsection{Sum of 3 bits - 3-bit-sum}
 Given $n_{1}, n_{2}$ their sum produces $n_{1} + n_{2}$ and their carry. \newline
@@ -299,3 +297,103 @@ M(B + 1) =
      \end{cases}
 \]
 Assuming that $p$ is prime.
+
+\section{Algorithms for the Discrete Logarithm problem}
+
+\subsection{Baby-steps/Giant-steps algorithm (Shank's method)}
+\begin{itemize}
+    \item Let $p$ be a large prime number.
+    \item Let also $\mathbb{Z}_{p}^{*} = <g> = \{1, \dots, p-1\}$.
+    \item Let $x \in \mathbb{Z}_{p}^{*}$.
+    \item The goal is to find $y$ such that $x = g^{y} \bmod p$.
+\end{itemize}
+The algorithm proceeds as follows:
+\begin{itemize}
+    \item Let's write $y$ by using two digits:
+    \begin{align*}
+        m &= \lceil \sqrt{p} \rceil &\implies y = c_{0} + c_{1} \cdot m
+    \end{align*}
+    Where $c_{i} \in \{0, \dots, m - 1\}$.
+    \item[\textbf{Baby steps}] Compute $g^{c_{i}} \bmod p$ for $c_{i} \in \{0, \dots, m - 1\}$. This operation, executed in sequence, costs $O(m \cdot \operatorname{log}^{2}(p))$.
+    \item The list is ordered in $\mathbb{Z}_{p}^{*}$. This can be achieved by only comparing the labels of the list, since $a < b \iff g^{a} < g^{b}$.
+    \item[\textbf{Giant steps}] Compute $g^{m} = g \cdot g^{m-1} \bmod p$ and $g^{-m} \bmod p$. The latter one can be obtained by using the Extended Euclidean Algorithm in $O(\operatorname{log}^{2}(p))$.
+    \item If $x \in \mathbb{Z}_{p}^{*}$ (this can be verified in logarithmic time by using the Binary Search algorithm), then $x = g^{y} \implies c_{0} = 0, c_{1} = y$.
+    \item If $x \not\in \mathbb{Z}_{p}^{*}$, then check if $x \cdot g^{-m} \in \mathbb{Z}_{p}^{*}$.
+    \item In that case, we would have that:
+        \begin{align*}
+            \exists i: & x \cdot g^{-m} &= g^{i} &\implies x \equiv_{p} g^{i + m}\\
+            \implies c_{0} = i, c_{1} = 1 & \implies y = i + m
+        \end{align*}
+    \item Otherwise, we would have that:
+        \begin{align*}
+            x \cdot g^{-2m} = (x \cdot g^{-m}) \cdot g^{-m}
+        \end{align*}
+    At this point, we'll check if $\exists j: x \cdot g^{-2m} = g^{j}$.
+    \item If so, then $x = g^{i + 2m} \implies c_{0} = j, c_{1} = 2$.
+\end{itemize}
+
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$x \in \mathbb{Z}_{p}^{*}, g: <g> = \mathbb{Z}_{p}^{*}$}
+\caption{Baby-steps/Giant-steps algorithm}\label{alg:baby_steps_giant_steps}
+    \Comment{Baby steps part:}\;
+    $m \gets \lceil \sqrt{p} \rceil$\;
+    $L \gets [None] * m - 1$\;
+    $M \gets [None] * m - 1$\;
+    \For{$c_{i} \in \{0, \dots, m - 1\}$}{
+        $L[c_{i}] \gets g^{c_{i}}$\;
+        $M[c_{i}] \gets x \cdot g^{-m \cdot c_{i}}$
+    }
+    $\operatorname{Sort}(L)$ \Comment{This can be achieved by only comparing the labels of the list, since $a < b \iff g^{a} < g^{b}$}\;
+    $\operatorname{Sort}(M)$\;
+    \Comment{Giant steps part:}\;
+    \For{$i \in L$}{
+        \For{$j \in M$}{
+            \If{$M[j] == L[i]$}{
+                \Return{$g^{i + j \cdot m}$}\;
+            } \Comment{$\exists j: x \cdot g^{-j \cdot m} = g^{i} \implies x = g^{i + j \cdot m}$}
+        }
+    } \Comment{This part costs $O(\operatorname{log}^{})$}
+\end{algorithm}
+
+\subsection{Index-Calculus Algorithm}
+\subsubsection{B-smoothness test}
+The goal of this algorithm is to return $TRUE$ if and only if the input number $n$ is $B$-smooth, given $B$.
+
+\RestyleAlgo{ruled}
+\begin{algorithm}
+\KwData{$n, B \in \mathbb{Z}$}
+\caption{B-smoothness test}\label{alg:b_smoothness_test}
+    $P \gets \{p_{i} : p_{i} \text{ is prime} \land p_{i} \leq B\}$\;
+    $k \gets |P|$\;
+    $N_{1} \gets n$\;
+    $V = [0, \dots, 0]$\;
+    $i \gets 1$\;
+    \Do{$p_{i} \nmid N_{1}$}{
+        \If{$p_{i} \mid N_{1}$}{
+            $V[i] \gets V[i+1]$\;
+            $N_{1} \gets \frac{N_{1}}{p_{i}}$\;
+        }\label{b_smt_2}
+    }
+    \If{$N_{i} == 1$}{
+        \Return{$TRUE$}\;
+    }
+    \If{$N_{1} > 1$}{
+        $i \gets i + 1$\;
+        \If{$i \leq k$}{
+            \GoTo{\ref{b_smt_2}}\;
+        }
+        \Else{
+            \Return{$FALSE$}\;
+        }
+    }
+\end{algorithm}
+Let's consider the cost of this algorithm in its worst case.\newline
+The worst case is when $\forall i = 1, \dots, k: p_{i} \mid n$. Then
+\begin{itemize}
+    \item The cost of the division performed on \ref{b_smt_2} is $O(\operatorname{log}^{2}(n))$ b.o.
+    \item The length of the loop at \ref{b_smt_2} is $O(\operatorname{log}(n))$, since:
+    \[p_{i}^{\alpha_{i}} \leq n \land \alpha_{i} \leq \operatorname{log}(n) \implies \alpha_{i} \leq \frac{\operatorname{log}(n)}{\operatorname{log}(p_{i})}\]
+    \item This process is repeated $k = \Pi(B)$ times, that is the number of prime numbers up to $B$.
+    \item Therefore, the total cost of this algorithm is $O(\Pi(B) \operatorname{log}^{3}(n))$
+\end{itemize}

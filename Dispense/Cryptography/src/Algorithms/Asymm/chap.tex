@@ -43,8 +43,37 @@ This works because $e_{B}$ and $d_{B}$ are picked in such a way that they're eac
 Also, since $n_{B}$ is supposed to be a really large number, is safe to assume that $M \leq n_{b}$, therefore:
 \[
 M \bmod n_{B} = M
-\] 
+\]
 
 \subsection{Broadcast communications with RSA}
 In order to communicate with multiple subjects, each user has just to repeat the Initialization and Communication procedure described before, one time for each other node in the network. \newline
 It's important that the user does not use the same public keys multiple times, in order to prevent Broadcast attacks.
+
+\section{Elgamal Cryptosystem}
+\subsection{Description}
+This cryptosystem is based on the hardness of the Discrete Logarithm problem.\newline
+Let $p$ be a large prime number, and $g$ the generator of $\mathbb{Z}_{p}^{*} = <g>$. Both $p, g$ are public. Then:
+\begin{itemize}
+    \item $\mathcal{C} = \mathcal{M} = \mathbb{Z}_{p}^{*}$
+    \item $\mathcal{K} = \mathbb{Z}_{p-1}$
+\end{itemize}
+This cryptosystem works as follows:
+\begin{itemize}
+    \item $A$ generates randomly $x \in \mathbb{Z}_{p-1}$, that will serve as its secret key.
+    \item $B$ generates randomly $y \in \mathbb{Z}_{p-1}$, that will serve as its secret key.
+    \item $A$ computes $a = g^{x} \bmod p \in \mathbb{Z}_{p}^{*}$, that will serve as its public key.
+    \item $B$ computes $b = g^{y} \bmod p \in \mathbb{Z}_{p}^{*}$, that will serve as its public key.
+    \item In order to communicate with $B$, $A$ must do the following:
+    \begin{enumerate}
+        \item Generate randomly $k \in \mathcal{K}$;
+        \item Compute $b^{k} \bmod p \in \mathbb{Z}_{p}^{*}$;
+        \item Send to $B$: $[g^{k} \bmod p, M \cdot b^{k} \bmod p]$
+    \end{enumerate}
+    \item In order to decipher the message received from $A$, $B$ must compute $b^{-k}$ by using the $g^{k} \bmod p$, and therefore deciphering $M$. This is possible since $b = g^{y} \bmod p$ and $y$ is only known to $B$.
+\end{itemize}
+\subsection{Remarks}
+It's important to consider what follows:
+\begin{itemize}
+    \item If an intruder can solve efficiently the Discrete Logarithm problem, then he can easily preak the system by finding $x$ or $y$.
+    \item If only $[k, M \cdot b^{k}]$ is sent, than the system is easily breakable because $b$ is public and $k$ is sent in the first part of the message.
+\end{itemize}

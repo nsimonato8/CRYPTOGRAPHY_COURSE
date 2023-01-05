@@ -64,6 +64,45 @@ The Shannon's theorem helps us to decide if a given cryptosystem is perfect:
         \item $\forall m \in \mathcal{M}: \exists ! k \in \mathcal{K}: f_{k}(m) = c$
     \end{itemize}
 \end{theorem}
+\begin{proof}
+    The proof proceeds by proving both the direction of the implication:
+    \begin{itemize}
+        \item The cryptosystem is perfect $\implies \forall k \in \mathcal{K}: \mathbb{P}_{\mathbb{K}}(K = k) = \frac{1}{|\mathcal{K}|} \land\forall m \in \mathcal{M}: \exists ! k \in \mathcal{K}: f_{k}(m) = c$:
+        Let $c \in \mathcal{C}$ be fixed. Let $m \in \mathcal{M}$
+        \noindent
+        \begin{gather*}
+            \mathbb{P}(m) > 0 \implies \mathbb{P}(m|c) > 0\\
+            \text{Then, } \mathbb{P}(m) > 0 \implies \mathbb{P}(c|m) > 0\\ \text{Therefore, } \sum_{k \in \mathcal{K}}\mathbb{P}(k) > 0 \\
+            \text{So, } \exists k \in \mathcal{K}: \mathcal{f}_{k}(m) = c\\
+            \implies |\mathcal{C}| = |\{\mathcal{f}_{k}(m): k \in \mathcal{K}\}| \leq \mathcal{K}\\
+            \text{By hypothesis, we have that } |\mathcal{K}| = |\mathcal{M}| = |\mathcal{C}|\\
+            \implies |\{\mathcal{f}_{k}(m): k \in \mathcal{K}\}| = \mathcal{K}\\
+            \implies \forall c \in \mathcal{C} \exists ! k \in \mathcal{K} : \mathcal{f}_{k}(m) = c\\
+            \text{By Bayes' Theorem }\mathbb{P}(m|c) = \frac{\mathbb{P}(c|m) \cdot \mathbb{P}(m)}{\mathbb{P}(c)} = \frac{\mathbb{P}(k_{m}) \cdot \mathbb{P}(m)}{\mathbb{P}(c)}\\
+            \text{By perfect secrecy }\mathbb{P}(m|c) = \mathbb{P}(m) > 0\\
+            \implies 1 = \frac{\mathbb{P}(k_{m})}{\mathbb{P}(c)} \implies \mathbb{P}(c) = \mathbb{P}(k_{m})\\
+            \text{Therefore, } \mathbb{P}(k_{m}) \text{ is constant, since } c \text{ is fixed.}\\
+            \text{Therefore, } \mathbb{P}(k) \text{ is equally distributed.}
+        \end{gather*}
+        \item $\forall k \in \mathcal{K}: \mathbb{P}_{\mathbb{K}}(K = k) = \frac{1}{|\mathcal{K}|} \land\forall m \in \mathcal{M}: \exists ! k \in \mathcal{K}: f_{k}(m) = c \implies$ The cryptosystem is perfect.
+        \begin{itemize}
+            \item[Hypothesis 1]: $\forall k \in \mathcal{K}: \mathbb{P}_{\mathbb{K}}(K = k) = \frac{1}{|\mathcal{K}|}$
+            \noindent
+            \begin{gather*}
+                \mathbb{P}(c) = \sum_{k \in \mathcal{K}: f_{k}(m) = m} \mathbb{P}(k) \cdot \mathbb{P}(f_{k}^{-1}(c)) = 1
+            \end{gather*}
+            \item[Hypothesis 2]: $\forall m \in \mathcal{M}: \exists ! k \in \mathcal{K}: f_{k}(m) = c$
+            \noindent
+            \begin{gather*}
+                \mathbb{P}(c) = \frac{1}{|\mathcal{K}|}\sum_{m \in \mathcal{M}} \mathbb{P}(m) = \frac{1}{|\mathcal{K}|}\\
+                \text{Since } \sum_{m \in \mathcal{M}} \mathbb{P}(m) = 1\\
+                \text{Then, } \mathbb{P}(c) = \sum_{k \in \mathcal{K}: f_{k}^{-1}(c) = m} \mathbb{P}(k) = \mathbb{P}(k_{m,c}) = \frac{1}{|\mathcal{K}|}\\
+                \text{So, }\mathbb{P}(c|m) = \mathbb{P}(c)\\
+                \text{Therefore, the cryptosystem is perfect.}
+            \end{gather*}
+        \end{itemize}
+    \end{itemize}
+\end{proof}
 
 \paragraph{Vernam's cipher aka One Time Pad}
 This is currently the only known perfect cipher. \newline
@@ -77,9 +116,9 @@ This is currently the only known perfect cipher. \newline
     \end{itemize}
 \end{definition}
 It's important that th keys are not leaked, and that, eventually, the keys needed for the communication are not exchanged by using the 3-step-protocol \ref{3-step-protocol}. This is because if an intruder collects all of the exchanged messages it may able to discover $m$ by applyng the XOR function to them:
-\begin{align*}
-    c_{1} &\oplus c_{2} &\oplus c_{3} &=\\
-    m \oplus k_{A} &\oplus m \oplus k_{A} \oplus k_{B} &\oplus m \oplus k_{B} &=\\
-    m &\oplus m &\oplus m &= m \\
-\end{align*}
+\begin{gather*}
+    c_{1} \oplus c_{2} \oplus c_{3} =\\
+    m \oplus k_{A} \oplus m \oplus k_{A} \oplus k_{B} \oplus m \oplus k_{B} =\\
+    m \oplus m \oplus m = m \\
+\end{gather*}
 That's because the XOR operator is commutative and associative, and also because $\forall a: a \oplus a = 1$, therefore $k_{A}, k_{B}$ cancel themselves out.

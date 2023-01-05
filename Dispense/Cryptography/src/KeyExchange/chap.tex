@@ -15,3 +15,28 @@
     \end{itemize}
 \end{definition}
 This protocol can easily implemented by using the XOR operator as the enciphering function, as it satisfies the assumptions of this protocol.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/KeyExc_3SP.png}
+    \caption{Key Exchange with the Three-Steps-Protocol.}
+\end{figure}
+
+\section{Diffie-Helman algorithm}
+This method allows to exchange the keys for the communication over an unsecure channel. This methods assumes that computing the discrete logarithm is hard.\newline
+Let $p$ be a large prime number, and $g$ the generator of $\mathbb{Z}_{p}^{*} = <g>$. $p, g$ are public available.
+Let $A, B$ be the users of the communication. Then:
+\begin{itemize}
+    \item $A$ generates randomly $a \in \mathbb{Z}_{p-1}$ and sends $g^{a} \bmod p \in \mathbb{Z}_{p}^{*}$.
+    \item $B$ generates randomly $b \in \mathbb{Z}_{p-1}$ and sends $g^{b} \bmod p \in \mathbb{Z}_{p}^{*}$.
+    \item $A$ computes $(g^{b})^{a}$ and $B$ computes $(g^{a})^{b}$. This now allows them to compute respectively $b, a$ by using the logarithm.
+    \item Since $a, b$ are secret, the keys are exchanged successfully.
+\end{itemize}
+
+The intruder can only have access to $p, g$ (that are public) and $g^{a}, g^{b}$. Computing $g^{ab}$ is called the Diffie-Helman problem.\newline
+If the intruder can solve this problem, that translates to the Discrete Logarithm Problem\ref{discrete_logarithm_prob}, then he has access to $a, b$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/KeyExc_DHP.png}
+    \caption{Key Exchange with the Three-Steps-Protocol.}
+\end{figure}

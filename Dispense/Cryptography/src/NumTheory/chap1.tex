@@ -1,32 +1,40 @@
 \section{Definitions of Number Theory}
 \subsection{The cyclic group $\mathbb{Z}_{n}^{*}$}
-The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as
-\[
-\mathbb{Z}_{n}^{*} = \{a \in \mathbb{Z}_{n}: (a,n) = 1\}
-\]
-The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that:
-\[
-\forall a \in \mathbb{Z}_{n}^{*}: \exists i: a \equiv_{m} g^{i}
-\]
+\begin{definition}[The cyclic group $\mathbb{Z}_{n}^{*}$]
+    The cyclic group $\mathbb{Z}_{n}^{*}$ is defined as
+    \[
+    \mathbb{Z}_{n}^{*} = \{a \in \mathbb{Z}_{n}: (a,n) = 1\}
+    \]
+    The \textbf{generator} of $\mathbb{Z}_{n}^{*}$ is a number in $\mathbb{Z}_{n}^{*}$ such that:
+    \[
+    \forall a \in \mathbb{Z}_{n}^{*}: \exists i: a \equiv_{m} g^{i}
+    \]
+\end{definition}
 For this reason, $\mathbb{Z}_{n}^{*}$ is also referred as $< g >$.\newline
-An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\alpha}]$,
- $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^{\alpha}$ is a power of a prime number.\newline
+An interesting property is that only for $[1,2,4, \phi, \phi^{\alpha}, 2 \phi^{\alpha}]$, $\mathbb{Z}_{n}^{*}$ is cyclic, where $\phi$ is a prime number and $\phi^{\alpha}$ is a power of a prime number\ref{gauss_theorem}.
 
 \subsection{Pseudoprime number}
-For an integer $a > 1$, if a composite integer $x$ divides $a^{x-1} - 1$, then $x$ is called a \textbf{Fermat pseudoprime} to base $a$.
-\[
-x \text{ is spsp(a) } \iff x|a^{x - 1} - 1
-\]
+\begin{definition}[Pseudoprime number]
+    For an integer $a > 1$, if a composite integer $x$ divides $a^{x-1} - 1$, then $x$ is called a \textbf{Fermat pseudoprime} to base $a$.
+    \[
+    x \text{ is spsp(a) } \iff x|a^{x - 1} - 1
+    \]
+\end{definition}
 In other words, a composite integer is a Fermat pseudoprime to base a if it successfully passes the Fermat primality test for the base $a$.\newline
 $x$ is $spsp(a)$ is a predicate, that means that some $x$ is a \emph{strong pseudoprime number in base $a$}.
 
 \subsection{Carmichael numbers}
-Carmichael numbers are defined as follows:
-\begin{itemize}
-    \item Let $n$ be a composite number;
-    \item Then:
+\begin{definition}[Carmichael numbers]
+    Let $n$ be a composite number. Then:
     \[b^{n} \equiv_{n} b \implies b \text{ is a \textbf{Carmichael number}}\]
-\end{itemize}
+\end{definition}
+
+\subsection{B-smoothness}
+\begin{definition}[B-smoothness]
+    Let $n, B > 0 \in \mathbb{Z}$. Let also $p$ be a prime number. Then:
+    \[(p|n \implies p \leq B) \iff n \text{ is a \textbf{B-smooth number}}\]
+\end{definition}
+That is, if all the prime divisors of $n$ are smaller than $B$.
 
 \section{Reminders of Modular Arithmetic}
 \subsection{Little Fermat's Theorem}\label{little_fermat_th}
@@ -262,3 +270,24 @@ The following lemma is a consequence of this theorem.
 \begin{theorem}[Euler's Product Theorem]
     If $ \mathbb{R}e(s) > 1$, then \[\zeta(s) = \sum_{n = 1}^{+ \infty} \frac{1}{n^{2}} = \prod\limits_{p}(1 - \frac{1}{p^{2}})^{-1}\]
 \end{theorem}
+
+\section{Discrete Logarithm problem}
+\begin{definition}[Discrete Logarithm problem]\label{discrete_logarithm_prob}
+    Given $p, g, y$ where:
+    \begin{itemize}
+        \item $p$ is a large prime number;
+        \item $g$ is the generator of $\mathbb{Z}_{p}^{*}$;
+        \item $y \in \mathbb{Z}_{p}^{*}$.
+    \end{itemize}
+    Find $x \in \mathbb{Z}_{p-1}: g^{x} = y$
+\end{definition}
+
+\section{Gauss' Theorem}
+\begin{definition}[Gauss' Theorem]\label{gauss_theorem}
+    The theorem states as follows:
+    \begin{itemize}
+        \item $\mathbb{Z}_{n}^{*}$ is cyclic $\iff n = 1, 2, 4, p^{\alpha}, 2p^{\alpha}$
+        \item Assume that we know $g$ such that $<g> = \mathbb{Z}_{p}^{*}$:
+        therefore we can build $<g_{1}> = \mathbb{Z}_{p^{\alpha}}^{*}, <g_{2}> = \mathbb{Z}_{2p^{\alpha}}^{*}$ in polinomial time.
+    \end{itemize}
+\end{definition}

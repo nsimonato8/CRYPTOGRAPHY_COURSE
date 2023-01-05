@@ -18,6 +18,11 @@ The functioning of the digital signature is the following:
     \item $B$ verifies that $f_{B}^{-1}(f_{B}(m)) = m$;
     \item $B$ verifies that $f_{B}^{-1}(f_{B}(f_{A}^{-1}(A^{n}))) = f_{A}^{-1}(A^{n})$.
 \end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{img/DigSig.png}
+    \caption{Digital Signature in the general case.}
+\end{figure}
 Since $f_{A}$ is the unique function that can invert $f_{A}^{-1}$, $B$ can verify that the message $m$ is signed from $A$ (actually its nickname). \newline
 It's important that $f$ is chosen in such a way that computing $f^{-1}$ is computationally hard without the key. \newline
 In this case, \textbf{$f_{A}$ is public} and \textbf{$f_{B}$ is private}.
@@ -89,3 +94,36 @@ The functioning of this system is the following:
     f_{B}^{-1}(f_{A}(f_{A}^{-1}(f_{B}(s_{A} \bmod n_{B})))) = s_{A}
     \]
 \end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/DigSig_RSA.png}
+    \caption{Digital signature based on RSA.}
+\end{figure}
+
+\subsection{Digital signature based on the ElGamal cryptosystem}
+Let's assume that the cryptosystem used is the ElGamal cryptosystem. Let $A, B$ be the users.\newline
+In order for $A$ to sign a message $M$:
+\begin{enumerate}
+    \item $A$ generates $h \in \mathbb{Z}_{p-1}^{*}$. Remark that $h$ is invertible.
+    \item $A$ computes $u \equiv_{p} g^{h}$
+    \item $A$ computes $v$ such that:
+    \begin{align*}
+        M &\equiv_{p-1} x \cdot u + h \cdot v\\
+        \implies v &\equiv_{p-1} (M - x \cdot u) h^{-1}
+    \end{align*}
+    Where $x$ is $A$'s private key.
+    \item The digital signature is then $(u, v)$.
+    \item The message signed appears as $g^{k}, M \cdot b^{k}, (u,v)$
+\end{enumerate}
+
+In order for $B$ to verify the signature $g^{k}, M \cdot b^{k}, (u,v)$,
+it must compute:
+\begin{align*}
+    a^{u} \cdot u^{v} &= (g^{x})^{u} \cdot (g^{h})^{v} =\\
+    g^{ux + hv} &\equiv g^{M} \bmod p
+\end{align*}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/DigSig_ElG.png}
+    \caption{Digital signature based on Elgamal cryptosystem.}
+\end{figure}
