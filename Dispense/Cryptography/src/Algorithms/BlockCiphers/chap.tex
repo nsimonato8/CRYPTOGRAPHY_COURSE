@@ -170,18 +170,21 @@ Let now:
 \caption{Data Encryption Standard [Encryption]}\label{alg:DES_encrypt}
 $M \rightarrow \pi(M) \in \{0,1\}^{64}$\;
 \For{$1 \leq i \leq 16$}{
-    $[L_{i}, R_{i}] \gets [R_{i-1}, L_{i-1} \oplus P(S(E(R_{i-1} \oplus k_{i})))]$\;
+    $[L_{i}, R_{i}] \gets [R_{i-1}, L_{i-1} \oplus P(S(E(R_{i-1}) \oplus k_{i}))]$\;
 }
 $C \gets \pi^{-1}[R_{16}, L_{16}]$\;
 \Return{$C$}
 \end{algorithm}
+
+\subsubsection{Rotated keys $k_i$}
 The keys are produced according to the following procedure:
 \begin{itemize}
     \item To obtain $k_{i} \in \{0,1\}^{48}$ we have to remove the parity bits from the positions $8, 16, 24, 32, 40, 48, 56, 64$.
     \item Then, $k_{0} \gets \hat{k}$ (Then, $\hat{k} \in \{0,1\}^{56}$).
-    \item $k_{i}$ is generated from $k_{i-1} = [left_part | right_part]$, in which both $left_part, right_part$ are circular shifted of 1 or 2 bits. Then, 48 bits out of the 56 are chosen. That is why $K_{i}$ is called the \emph{Rotated Key}.
+    \item $k_{i}$ is generated from $k_{i-1} = [left\_part << 2 | right\_part << 2]$, in which both $left\_part, right\_part$ are circular shifted of 1 or 2 bits. Then, 48 bits out of the 56 are chosen. That is why $k_{i}$ is called the \emph{Rotated Key}.
 \end{itemize}
 
+\subsubsection{The expansion function $E$}
 The expansion function $E$ is defined as follows:
 \[E: \{0,1\}^{32} \rightarrow \{0,1\}^{48}\]
 \begin{itemize}
@@ -192,6 +195,7 @@ The expansion function $E$ is defined as follows:
     \item Repeat until there are no bits, and align.
 \end{itemize}
 
+\subsubsection{The $S$ function}
 The $S$ function, also called \emph{S-box}, defined as
 \[S: \{0,1\}^{48} \rightarrow \{0,1\}^{32}\]
 works as follows:
@@ -203,6 +207,10 @@ works as follows:
     \item Given the input $b$, $S_{j}$ returns the cell which row is at the address $(b_{1}b_{6}, b_{2}b_{3}b_{4}b_{5})$.
 \end{itemize}
 This is the main point of strength of the method, but if the S-boxes are not conserved properly, then the protocol is not safe anymore.
+
+\subsubsection{The $P$ function}
+The $P$-function is a simple fixed permutation function, that at each iteration permutes the bits of the output of the $S$-box.
+\[P: \{0,1\}^{32} \rightarrow \{0,1\}^{32}\]
 
 \RestyleAlgo{ruled}
 \begin{algorithm}

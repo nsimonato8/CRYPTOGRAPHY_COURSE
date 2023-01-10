@@ -57,6 +57,11 @@ The attacks proceeds as follows:
     Therefore, he can compute:
     \[r^{-1} \cdot r \cdot m \bmod n_{A} = m\]
 \end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/RSA_attack_knownp.png}
+    \caption{Attack to Digital Signature that uses RSA cryptosystem.}
+\end{figure}
 
 \subsection{Random fault attack}
 This attack on RSA can be done when a signature is computed incorrectly. \newline
@@ -124,13 +129,18 @@ By using the \emph{Extended Euclidean Algorithm} (recall that $e_{X}, e_{Y}$ are
     \item The intruder computes $c_{1}^{-1} \bmod n_{X}$, using the \emph{E.E.A.}.
     \item The intruder then computes:
     \begin{align*}
-        (c_{1}^{-1})^{-r} \cdot c_{2}^{s} & =
-        (M^{-e_{X}})^{-r} \cdot M^{e_{Y} \cdot s} & =
-        M^{r \cdot e_{X} + s \cdot e_{Y}} \bmod n_{X} & =
+        (c_{1}^{-1})^{-r} \cdot c_{2}^{s} & =\\
+        (M^{-e_{X}})^{-r} \cdot M^{e_{Y} \cdot s} & =\\
+        M^{r \cdot e_{X} + s \cdot e_{Y}} \bmod n_{X} & =\\
         M \bmod n_{X}
     \end{align*}
 \end{itemize}
 Therefore, if different public keys aren't used, an intruder can easily intercept a broadcasted message.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/RSA_attack_basic.png}
+    \caption{Basic RSA attack on broadcast communication.}
+\end{figure}
 
 \subsection{Broadcast attack}
 In this attack, the user broadcasts a message by using different values for each receiver ($\forall i \neq j: n_{i} \neq n_{j}$), but uses the same value of $e$ for everyone. We'll assume that $r \geq e$.\newline
@@ -152,6 +162,51 @@ The attack is conducted as follows:
     Therefore, finding the solution in modulus $N$ is equivalent to find the solution to the system.
 \end{itemize}
 In order to prevent this kind of attack, when using RSA in broadcasts is important to use different values for $e,n$ for each user.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/RSA_attack_broadcast.png}
+    \caption{Another RSA attack on broadcast communication.}
+\end{figure}
+
+\subsection{Leaked $\varphi(n)$ RSA attack}
+Consider an RSA cryptosystem, in which the $\varphi(n)$ value is somehow leaked. Remark that:
+\begin{itemize}
+    \item $n = p \cdot q$
+    \item $\varphi(n) = (p - 1) \cdot (q - 1)$
+\end{itemize}
+Consider now what follows:
+\begin{align*}
+    \varphi(n) &= (p - 1) \cdot (q - 1) \\
+    \varphi(n) &= (p \cdot q) - p - q + 1 \\
+    \varphi(n) &= n - p - q + 1 \\
+    p + q &= n - \varphi(n) + 1 \\
+\end{align*}
+This equation can be used to solve the following system:
+\begin{align*}
+    \begin{cases}
+        p + q = n - \varphi(n) + 1\\
+        n = p \cdot q
+    \end{cases}& \rightarrow &
+    \begin{cases}
+        p + q = n - \varphi(n) + 1\\
+        q = \frac{n}{q}
+    \end{cases}\\
+    \begin{cases}
+        p + \frac{n}{q} = n - \varphi(n) + 1\\
+        q = \frac{n}{q}
+    \end{cases}& \rightarrow &
+    \begin{cases}
+        p^{2} + n = p(n - \varphi(n) + 1)\\
+        q = \frac{n}{q}
+    \end{cases}\\
+    & \rightarrow &
+    \begin{cases}
+        p^{2} - p(n - \varphi(n) + 1) + n = 0\\
+        q = \frac{n}{q}
+    \end{cases}
+\end{align*}
+
+The solution to the first equation is trivial, since it's sufficent to apply the quadratic formula to retrieve the solutions for $p$; this can easily lead to the solution for $q$ as well.
 
 \section{Attacks to Block Ciphers}
 \subsection{Known plaintext attack to an Affine block cipher}
