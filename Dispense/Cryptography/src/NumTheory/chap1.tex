@@ -37,7 +37,7 @@ $x$ is $spsp(a)$ is a predicate, that means that some $x$ is a \emph{strong pseu
 That is, if all the prime divisors of $n$ are smaller than $B$.
 
 \section{Reminders of Modular Arithmetic}
-\subsection{Little Fermat's Theorem}\label{little_fermat_th}
+\subsection{Little Fermat's Theorem}\label{little_fermat_theorem}
 \begin{theorem}[Little Fermat's Theorem]
     Consider what follows:
     \begin{itemize}
@@ -220,26 +220,30 @@ That is, if all the prime divisors of $n$ are smaller than $B$.
 \begin{theorem}[The Miller-Rabin Theorem]
     The \textbf{Miller-Rabin Theorem states that}:
     \begin{itemize}
-        \item Let $p$ be a prime number, such that $p \geq s$
-        \item Let $a \in \mathbb{N}: p \nmid a$
+        \item Let $p$ be a prime number.
+        \item Let $a \in \mathbb{N}: (a, p) = 1$
         \item Let $p - 1 = 2^{s}d$, where $d$ is odd.
-        \item Then, \[a^{d} \equiv_{p} 1 \lor a^{2^{r}d} \equiv_{p} -1 \text{, for some r } \in \{0, 1, \dots, s-1\}\]
+        \item Then:
+        \begin{itemize}
+            \item $a^{d} \equiv_{p} 1$ or
+            \item $a^{2^{r}d} \equiv_{p} -1 \text{ for some r } \in \{0, 1, \dots, s-1\}$.
+        \end{itemize}
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    Let's consider the first case:
+    The first part of the proof consists in showing that, if $n$ is a prime, then $\sqrt{1} \equiv_{n} \pm 1$:
+    \begin{align*}
+        &x^{2} \equiv_{n} 1 &\iff x^{2} - 1 \equiv_{n} 0\\
+        \iff& (x + 1)(x - 1) \equiv_{n} 0 &\iff x = \pm 1 \bmod n
+    \end{align*}
+    The second part of the proof consist in showing  that, if $n$ is an odd prime, then it is $spsp(a)$.
     \begin{itemize}
-        \item $x^{2} \equiv_{p} \pm 1$, for some $x \in \mathbb{N}$.
-        \item $a \in \mathbb{N} \land p \nmid a \implies a^{p-1} \equiv_{p} 1$, due to the Little Fermat's Theorem~\ref{little_fermat_th}.
-        \item Since \[p - 1 = 2^{s} \cdot d \land 2 \nmid d \implies a^{p-1} \equiv_{p} (a^{\frac{p-1}{2}})^{2} \equiv_{p} 1\]
-        \item Then, is proved that \[a^{\frac{p-1}{2}} \equiv_{p} \pm 1\]
-        \item Therefore: \[ a^{2^{r}d} \equiv_{p} -1 \text{for} r = s - 1\]
-    \end{itemize}
-    Consider now the case when $a^{2^{r}d} \equiv_{p} 1$:
-    \begin{itemize}
-        \item If $s = 1$, then $\frac{p-1}{2} = d \implies a^{d} \equiv_{p} 1$
-        \item If $s = 2$, then $\frac{p-1}{4} = d \implies a^{d} \equiv_{p} 1$
-        \item In general, for $s \geq 3$ we can consider successive square roots, until $r = 0$: then, $a^{\frac{p-1}{2^s}} \equiv_{p} 1$
+        \item Let $n$ be prime;
+        \item Let $a: (a,n) = 1$;
+        \item Let $s,d: n - 1 = 2^s \cdot d$, where $s > 0$ and $d$ is odd.
+        \item Then $a^{n-1} \equiv_{n} 1 \iff a^{2^s \cdot d} \equiv_{n} 1$, due to Fermat's Little Theorem.
+        \item We can now consider $a^{2^r \cdot d}$ successive square roots, for $1 \leq r < s$.
+        \item Therefore, starting from $r = s - 1$, we can compute $a^{2^r \cdot d} \bmod n$. If it's $-1$, then $n$ is $spsp(a)$. If it's $1$, we can repeat the computation for $r = s - 2$, and so on. Due to the previous part, there are no other possible cases.
     \end{itemize}
 \end{proof}
 

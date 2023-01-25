@@ -9,15 +9,16 @@ Randomly choose $a \in \mathbb{Z}_{n}^{*}$\;
     \Return{$n$ is composite}\;
 }
 $b \gets a^{d} \bmod n$\;
-\If{$b \equiv_{n} \pm 1$}{ \Comment{Due to the Little Fermat's Theorem}
+\If{$b \equiv_{n} \pm 1$}{
     \Return{$n$ is prime or spsp}\;
 }
 $e \gets 0$\;
 \While{$b \not\equiv_{n} \pm 1 \land e \leq s-2 $}{
-    $b \gets b^{2} \bmod n$
-}
-\If{$b \not\equiv_{n} 1$}{
-    \Return{$n$ is composite}\;
+    $b \gets b^{2} \bmod n$\;
+    \If{$b \not\equiv_{n} 1$}{
+        \Return{$n$ is composite}\;
+    }
+    $e \gets e + 1$\;
 }
 \Return{$n$ is prime or spsp}\;
 \end{algorithm}
@@ -137,7 +138,13 @@ Testing the primality for a single value of $a$ has cost of $O(\operatorname{log
 
 \subsection{Agrawal - Kayal - Saxema Theorem}
 \begin{theorem}[Agrawal - Kayal - Saxema Theorem]\label{aks_theorem}
-    Let $n \geq 4 \in \mathbb{N}$, and let $0 < r < n$ such that $(n,r) = 1$ and $order(n) > (\operatorname{log}_{2}(n))^{2}$. Then:
+    Consider what follows:
+    \begin{itemize}
+        \item Let $n \geq 4 \in \mathbb{N}$;
+        \item Let $0 < r < n$ such that $(n,r) = 1$;
+        \item $order_{r}(n) > (\operatorname{log}_{2}(n))^{2}$
+    \end{itemize}
+    Then:
     \[
     n \text{is prime} \iff
          \begin{cases}
@@ -153,12 +160,28 @@ Testing the primality for a single value of $a$ has cost of $O(\operatorname{log
     \KwData{$n \in \mathbb{N}$}
     \KwResult{$TRUE$ if $n$ is prime}
     \caption{AKS primality test pseudocode}\label{alg:aks_pscd_ptest}
-    \If{$n = \alpha^{\beta} \text{, where } \alpha \text{, } \beta > 1 \in \mathbb{N}$}{\Return{$FALSE$}}\label{step_1_aks}
-    $r \gets \argmin_{x} (x,n) = 1$\;
-    $d \gets \mathcal{ord}(n)_{\mathbb{Z}_{r}^{*}} > \lceil \operatorname{log}_{2}^{2}(n) \rceil$\;\label{step_2_aks}
-    \If{$\exists b \leq r : 1 < (b,n) < n$}{\Return{$FALSE$}}\label{step_3_aks}
-    \If{$n \leq r$}{\Return{$TRUE$}}\label{step_4_aks}
-    \If{$\exists b \in \mathbb{N}: 1 \leq b \leq \sqrt{r} \cdot \operatorname{log}_{2}(n) \land (x + b)^{n} \not\equiv_{(x^{r} - 1, n)} x^{n} + b$}{\Return{$FALSE$}}\label{step_5_aks}
+    \If{$\exists \alpha, \beta > 1 \in \mathbb{N}: n = \alpha^{\beta}$}{
+        \Return{$FALSE$}\;\label{step_1_aks}
+    }
+
+    $r \gets \argmin_{r} \operatorname{ord}_{\mathbb{Z}_{r}^{*}}(n) > \lceil \operatorname{log}_{2}^{2}(n) \rceil$\;\label{step_2_aks}
+
+    \For{$b = \{1, \dots, r\}$}{
+        \If{$1 < (b,n) < n$}{
+            \Return{$FALSE$}\;\label{step_3_aks}
+        }
+    }
+
+    \If{$n \leq r$}{
+        \Return{$TRUE$}\; \label{step_4_aks}
+    }
+
+    \For{$b = \{1, \dots, \sqrt{r} \cdot \operatorname{log}_{2}(n)\}$}{
+        \If{$(x + b)^{n} \not\equiv x^{n} + b \bmod (x^{r} - 1, n)$}{
+            \Return{$FALSE$}\;\label{step_5_aks}
+        }
+    }
+
     \Return{$TRUE$}\;\label{step_6_aks}
 \end{algorithm}
 

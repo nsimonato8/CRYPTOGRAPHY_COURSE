@@ -61,6 +61,7 @@ This method aims to factorize a number $N$ in two numbers $p, q$, such that $N =
 N = x^{2} - y^{2} = (x + y)(x - y)
 \]
 If $N$ is odd it can be shown that $y = \frac{N - 1}{2}, x = \frac{N + 1}{2}$.
+
 \RestyleAlgo{ruled}
 \begin{algorithm}
 \KwData{$N \in \mathbb{N}$}
@@ -69,12 +70,15 @@ If $N$ is odd it can be shown that $y = \frac{N - 1}{2}, x = \frac{N + 1}{2}$.
 $y \gets$ 1\;
 \Repeat{$y = \frac{N - 1}{2}$}{
     $x \gets N + y^{2}$\;
-    \If{$(\lfloor \sqrt{N + y^{2}}\rfloor)^{2} = N + y^{2}$}{}\Comment{Checks if $N + y^{2}$ is a perfect square}
-    \Return{$x,y$}
+    \If{$(\lfloor \sqrt{N + y^{2}}\rfloor)^{2} = N + y^{2}$}{
+        \Return{$x,y$}
+    }\Comment{Checks if $N + y^{2}$ is a perfect square}
+
     $y \gets y + 1$\;
 }
 \Return{$p = x + y, q = x - y$}
 \end{algorithm}
+
 Let's now consider the cost of this algorithm:
 \begin{itemize}
     \item Each iteration has a cost of
@@ -83,7 +87,7 @@ Let's now consider the cost of this algorithm:
         O(\operatorname{log}^{3}(N + y^{2}))
     \end{align*}
     \item The loop is repeated $O(\operatorname{log}^{A}(N))$ times.
-    \item Therefore, the complexity of this algorithm is $O(\operatorname{log}^{A + 3}(N))$ b.o..
+    \item Therefore, the complexity of this algorithm is $O(\operatorname{log}^{A + 3}(N))$ b.o. .
 \end{itemize}
 
 \section{Pollard's rho-method}
@@ -91,8 +95,8 @@ The Pollard's $\rho$-method tries to factorize a number $N$, by attempting to fi
 \begin{itemize}
     \item Let $F: \mathbb{Z}_{N}^{*} \rightarrow \mathbb{Z}_{N}^{*}$.
     \item Let $x_{0} \in \mathbb{Z}_{N}^{*}$ be a randomly chosen seed.
-    \item Let $F^{(i)}(x_{0}) = F \circ F \circ \dots \circ F(x_{0})$.
-    \item We want to find $i,j$ such that $F^{(i)}(x_{0}) \equiv_{N} F^{(j)}(x_{0})$, and compute $(N, F^{(i)}(x_{0}) - F^{(i)}(x_{0}))$
+    \item Let $F^{(i)}(x_{0}) = F \circ F \circ \dots \circ F(x_{0})$, $i$ times.
+    \item We want to find $i,j$ such that $F^{(i)}(x_{0}) \equiv_{N} F^{(j)}(x_{0})$, and compute $(N, F^{(i)}(x_{0}) - F^{(j)}(x_{0}))$
 \end{itemize}
 Let's now investigate why this algorithm is correct:
 \begin{itemize}

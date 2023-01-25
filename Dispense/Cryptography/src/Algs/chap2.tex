@@ -96,7 +96,7 @@ It is clear that we can spare a lot of computational resources by just calculati
 \RestyleAlgo{ruled}
 \begin{algorithm}
 \caption{The Square \& Multiply Method}\label{alg:SquareMultiply}
-$P \gets 1$\;
+$P \gets 1$\;\label{instr_1}
 $M \gets m$\;
 $A \gets a \bmod n$\;\label{instr_3}
 \While{$M > 0$}{
@@ -119,7 +119,12 @@ Let's compute the complexity of this algorithm:
     \item Instrucion \ref{instr_8} can be executed in $O(\operatorname{log}^{2}(n))$.
     \item The cost of \ref{instr_10} is $O(\operatorname{log}^{2}(n))$, because it ensures that $A \leq n$.
     \item The loop is executed $\operatorname{log}(m)$ times.
-    \item The total cost of this algorithm is then $O(\operatorname{log}(n) \cdot \operatorname{log}(a) + \operatorname{log}(m) \cdot (\operatorname{log}^{2}(n) + \operatorname{log}(m)))$ \\ $= O(\operatorname{log}^{2}(m) + \operatorname{log}(m) \cdot \operatorname{log}(n))$.
+    \item The total cost of this algorithm is then
+    \begin{align*}
+        &O(\operatorname{log}(n) \cdot \operatorname{log}(a) + \operatorname{log}(m) \cdot (\operatorname{log}^{2}(n) + \operatorname{log}(m))) =\\
+        &O(\operatorname{log}^{2}(m) + \operatorname{log}^{2}(n) \cdot \operatorname{log}(m)) =\\
+        &O(\operatorname{log}^{2}(n) \cdot \operatorname{log}(m))
+    \end{align*}
 \end{itemize}
 This algorithm can be easily converted for the computation of non-modular powers by applying the following changes:
 \RestyleAlgo{ruled}
@@ -128,39 +133,27 @@ This algorithm can be easily converted for the computation of non-modular powers
     $P \gets P \cdot A \bmod n$ $\Longrightarrow$ $P \gets P \cdot A$\;\label{instr_8a}
     $A \gets A^{2} \bmod n$ $\Longrightarrow$ $A \gets A^{2}$\;\label{instr_10a}
 \end{algorithm}
+
 \subsubsection{Square \& Multiply method for polynomials}
 Let's consider $\Re = \frac{\mathbb{Z}_{n}[x]}{x^{r} - 1}$. The modular powers of the elements in this set can be computed by using a variation of the Square \& Multiply method.
 \begin{itemize}
-    \item Assume that $f, g \in \Re$.
-    \item Let \[h(x) = f(x) \cdot g(x) = \sum_{j = 0}^{2r - 2} h_{j} \cdot x^{j}\]
-    \item Where \[h(j) = (\sum_{i=0}^{j} f_{i} \cdot g_{j - i} \bmod n) \bmod n\]
-    \item Then: \[T(h_{j}) = O(j \cdot \operatorname{log}^{2}(n))\]
-    \item Then: \[T(h(x)) = O(\sum_{j = 0}^{\operatorname{log}^{2}(n)}) = O(r^{2} \cdot \operatorname{log}^{2}(n))\]
+    \item Assume that $f\in \Re$.
+    \item Let $h(x) = f(x) \cdot f(x) = \sum_{j = 0}^{2r - 2} h_{j} \cdot x^{j}$, where $h_{j} \in \mathbb{Z}_{n}$.
+    \item Since we need to compute $O(r^2)$ divisions in $\bmod n$, each one at the cost of $O(\operatorname{log}^{2}(n))$, this operation costs $O(r^2 \cdot \operatorname{log}^{2}(n))$.
+    \item The reduction of $h(x)$ in $\bmod (x^r - 1)$ can be expressed as:
+    \[h(x) \bmod (x^r - 1) = \sum_{i=0}^{r-2} (h_{i} + h_{r+i} \bmod n)x^i + h_{r-1}x^{r-1}\]
+    Since we need to perform $O(r)$ divisions of the coefficients in $\bmod n$, this operation costs $O(r \cdot \operatorname{log}^{2}(n))$.
 \end{itemize}
-This result will be useful in the following computations. \newline
-Let's now consider $\frac{h(x)}{x^{r} - 1}$.
+This result can be used to compute $(x + b)^n \bmod (n, x^r - 1)$.
 \begin{itemize}
-    \item When $j > r - 1$, $h_{j} \cdot x^{j}$ does not take any part in the computations.
-    \item When $j = r$, then: \[\frac{h_{r} \cdot x^{r}}{x^{r} - 1 } = h_{r} + \frac{h_{r}}{x^{r} - 1}\]
-    Or, in other words: $h_{r} \cdot x^{r} \equiv_{x^{r} - 1} h_{r}$.
-    \item In the other cases: \[h_{r+i} \cdot x^{r+i} \equiv_{x^{r} - 1} h_{r-i} \cdot x^{r-i} \text{ for } 1 \leq i \leq r - 2\]
+    \item Consider the Square \& Multiply algorithm in previous section.
+    \item Substitute $A \gets 1$ with $A \gets (x + b)$ at instruction \ref{instr_1}.
+    \item Instead of performing instruction \ref{instr_10}, we can perform the squaring of the polynomial $A$ as previously described.
 \end{itemize}
 %An image can be useful
-Then:
-\[h(x) \equiv_{(n, x^{r} - 1)} f(x) \cdot g(x) \equiv
-[\sum_{j=0}^{r - 2}((h_{j} + h_{r + j}) \bmod n) \cdot x^{j}] + h_{r-1} \cdot x^{r-1}\]\label{comp:partial_prod_pol}
+Therefore, since we algorithm performs at most $O(log(n))$ times the squaring of $A$ (that is the most expensive operation of the loop), the algorithm has a cost of $O(r^2 \cdot \operatorname{log}^{3}(n))$ b. ops.
 
 Therefore: \[T(h(x) \bmod (n, x^{r} - 1)) = O(r^{2} \cdot \operatorname{log}^{2}(n))\]
-Finally, we can analyze the complexity of the computation of the modular power $h(x)$ elevated to $n$. \newline
-In order to optimize the use of the computational resources, we can use a variation of the Square \& Multiply method (See \ref{alg:SquareMultiply});
-although, this time, the computation of the partial products will be conducted by using the previously explained procedure (See \ref{comp:partial_prod_pol}). \newline
-The cost of this method would then be
-\begin{align*}
-    T(\#Loops \cdot (h(x) \bmod (n, x^{r} - 1))) = O(\operatorname{log}(n) \cdot r^{2} \cdot \operatorname{log}(n)) \\
-    & = O(r^{2} \cdot \operatorname{log}^{3}(n))
-\end{align*}
-
-
 
 \subsection{Finding the $b$-expansion of $n$ ($n_{b}$)}
 Let's consider the cost in bit operations of the conversion of a number $n$ to a new base $b$. \newline
@@ -208,7 +201,7 @@ The cost of this algorithm is then $O(order(a) \cdot \operatorname{log}^{2}(p))$
 \begin{algorithm}
 \KwData{$a, p$}
 \KwResult{$order_{p}(a)$}
-\caption{The Extended Euclidean Algorithm}\label{alg:OrdElemGrp}
+\caption{Order of $a$ in the group $\mathbb{Z}_{p}^{*}$}\label{alg:OrdElemGrp}
 $x \gets a$\;
 $ord \gets 1$\;
 \While{$x \not\equiv_{p} 1$}{
@@ -297,103 +290,3 @@ M(B + 1) =
      \end{cases}
 \]
 Assuming that $p$ is prime.
-
-\section{Algorithms for the Discrete Logarithm problem}
-
-\subsection{Baby-steps/Giant-steps algorithm (Shank's method)}
-\begin{itemize}
-    \item Let $p$ be a large prime number.
-    \item Let also $\mathbb{Z}_{p}^{*} = <g> = \{1, \dots, p-1\}$.
-    \item Let $x \in \mathbb{Z}_{p}^{*}$.
-    \item The goal is to find $y$ such that $x = g^{y} \bmod p$.
-\end{itemize}
-The algorithm proceeds as follows:
-\begin{itemize}
-    \item Let's write $y$ by using two digits:
-    \begin{align*}
-        m &= \lceil \sqrt{p} \rceil &\implies y = c_{0} + c_{1} \cdot m
-    \end{align*}
-    Where $c_{i} \in \{0, \dots, m - 1\}$.
-    \item[\textbf{Baby steps}] Compute $g^{c_{i}} \bmod p$ for $c_{i} \in \{0, \dots, m - 1\}$. This operation, executed in sequence, costs $O(m \cdot \operatorname{log}^{2}(p))$.
-    \item The list is ordered in $\mathbb{Z}_{p}^{*}$. This can be achieved by only comparing the labels of the list, since $a < b \iff g^{a} < g^{b}$.
-    \item[\textbf{Giant steps}] Compute $g^{m} = g \cdot g^{m-1} \bmod p$ and $g^{-m} \bmod p$. The latter one can be obtained by using the Extended Euclidean Algorithm in $O(\operatorname{log}^{2}(p))$.
-    \item If $x \in \mathbb{Z}_{p}^{*}$ (this can be verified in logarithmic time by using the Binary Search algorithm), then $x = g^{y} \implies c_{0} = 0, c_{1} = y$.
-    \item If $x \not\in \mathbb{Z}_{p}^{*}$, then check if $x \cdot g^{-m} \in \mathbb{Z}_{p}^{*}$.
-    \item In that case, we would have that:
-        \begin{align*}
-            \exists i: & x \cdot g^{-m} &= g^{i} &\implies x \equiv_{p} g^{i + m}\\
-            \implies c_{0} = i, c_{1} = 1 & \implies y = i + m
-        \end{align*}
-    \item Otherwise, we would have that:
-        \begin{align*}
-            x \cdot g^{-2m} = (x \cdot g^{-m}) \cdot g^{-m}
-        \end{align*}
-    At this point, we'll check if $\exists j: x \cdot g^{-2m} = g^{j}$.
-    \item If so, then $x = g^{i + 2m} \implies c_{0} = j, c_{1} = 2$.
-\end{itemize}
-
-\RestyleAlgo{ruled}
-\begin{algorithm}
-\KwData{$x \in \mathbb{Z}_{p}^{*}, g: <g> = \mathbb{Z}_{p}^{*}$}
-\caption{Baby-steps/Giant-steps algorithm}\label{alg:baby_steps_giant_steps}
-    \Comment{Baby steps part:}\;
-    $m \gets \lceil \sqrt{p} \rceil$\;
-    $L \gets [None] * m - 1$\;
-    $M \gets [None] * m - 1$\;
-    \For{$c_{i} \in \{0, \dots, m - 1\}$}{
-        $L[c_{i}] \gets g^{c_{i}}$\;
-        $M[c_{i}] \gets x \cdot g^{-m \cdot c_{i}}$
-    }
-    $\operatorname{Sort}(L)$ \Comment{This can be achieved by only comparing the labels of the list, since $a < b \iff g^{a} < g^{b}$}\;
-    $\operatorname{Sort}(M)$\;
-    \Comment{Giant steps part:}\;
-    \For{$i \in L$}{
-        \For{$j \in M$}{
-            \If{$M[j] == L[i]$}{
-                \Return{$g^{i + j \cdot m}$}\;
-            } \Comment{$\exists j: x \cdot g^{-j \cdot m} = g^{i} \implies x = g^{i + j \cdot m}$}
-        }
-    } \Comment{This part costs $O(\operatorname{log}^{})$}
-\end{algorithm}
-
-\subsection{Index-Calculus Algorithm}
-\subsubsection{B-smoothness test}
-The goal of this algorithm is to return $TRUE$ if and only if the input number $n$ is $B$-smooth, given $B$.
-
-\RestyleAlgo{ruled}
-\begin{algorithm}
-\KwData{$n, B \in \mathbb{Z}$}
-\caption{B-smoothness test}\label{alg:b_smoothness_test}
-    $P \gets \{p_{i} : p_{i} \text{ is prime} \land p_{i} \leq B\}$\;
-    $k \gets |P|$\;
-    $N_{1} \gets n$\;
-    $V = [0, \dots, 0]$\;
-    $i \gets 1$\;
-    \Do{$p_{i} \nmid N_{1}$}{
-        \If{$p_{i} \mid N_{1}$}{
-            $V[i] \gets V[i+1]$\;
-            $N_{1} \gets \frac{N_{1}}{p_{i}}$\;
-        }\label{b_smt_2}
-    }
-    \If{$N_{i} == 1$}{
-        \Return{$TRUE$}\;
-    }
-    \If{$N_{1} > 1$}{
-        $i \gets i + 1$\;
-        \If{$i \leq k$}{
-            \GoTo{\ref{b_smt_2}}\;
-        }
-        \Else{
-            \Return{$FALSE$}\;
-        }
-    }
-\end{algorithm}
-Let's consider the cost of this algorithm in its worst case.\newline
-The worst case is when $\forall i = 1, \dots, k: p_{i} \mid n$. Then
-\begin{itemize}
-    \item The cost of the division performed on \ref{b_smt_2} is $O(\operatorname{log}^{2}(n))$ b.o.
-    \item The length of the loop at \ref{b_smt_2} is $O(\operatorname{log}(n))$, since:
-    \[p_{i}^{\alpha_{i}} \leq n \land \alpha_{i} \leq \operatorname{log}(n) \implies \alpha_{i} \leq \frac{\operatorname{log}(n)}{\operatorname{log}(p_{i})}\]
-    \item This process is repeated $k = \Pi(B)$ times, that is the number of prime numbers up to $B$.
-    \item Therefore, the total cost of this algorithm is $O(\Pi(B) \operatorname{log}^{3}(n))$
-\end{itemize}

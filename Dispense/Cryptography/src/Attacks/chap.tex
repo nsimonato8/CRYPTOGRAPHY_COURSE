@@ -239,17 +239,18 @@ The attacks is conducted as follows:
     \[c_{i} \equiv A \cdot p_{i} + b \bmod N\]
     \item Now, consider that:
     \[c_{i} - c_{0} \equiv A \cdot p_{i} + b - A \cdot p_{0} - b \bmod N\]
-    \item Then we have to matrixes:
+    \item Then we define two matrixes:
     \[C = (c_{1} - c_{0}, \dots, c_{\mathcal{l}} - c_{0}), P = (p_{1} - p_{0}, \dots, p_{\mathcal{l}} - p_{0})\]
-    \item So, we have that:
-    \[C \equiv A \cdot P \bmod N\]
-    \item If $(det P, N) = 1 \implies P$ is invertible, therefore:
+    \item So, we have that, if $(det P, N) = 1 \implies P$ is invertible:
     \begin{align*}
-        C \cdot P^{-1} &\equiv A \cdot P \cdot P^{-1} \bmod N \\
-        A \equiv C \cdot P^{-1} \bmod N  \land b \equiv c_{0} - A \cdot p_{0} \bmod N
+        C &\equiv A \cdot P \bmod N\\
+        \iff C \cdot P^{-1} &\equiv A \cdot P \cdot P^{-1} \bmod N \\
+        A \equiv C \cdot P^{-1} \bmod N  &\land b \equiv c_{0} - A \cdot p_{0} \bmod N
     \end{align*}
-    \item Then, fixed $p_{0} \in \mathbb{Z}_{N}^{\mathcal{l}}$, let $v_{i}$ be a vector such that $v_{i} = (0, 0, \dots, 1, \dots, 0)$, where the $1$ is in the $i$-th position.
-    \item Now it's clear that $p_{i} = p_{0} + v_{i} \bmod N$.
-    \item Therefore, $P = I_{\mathcal{l}} = P^{-1}$.
-    \item $\implies C = A \cdot P \bmod N = A$
 \end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/Affine_Block_Cipher_Known-plaintext_Attack.png}
+    \caption{Known plaintext attack to an Affine block cipher.}
+\end{figure}
